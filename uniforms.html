@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shark Police v.0.0.1 - เลขชุดเครื่องแบบ</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.1/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.1/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        @keyframes rotateLogo {
+            0% {
+                transform: perspective(500px) rotateY(0deg);
+            }
+            100% {
+                transform: perspective(500px) rotateY(360deg);
+            }
+        }
+    </style>
+</head>
+<body x-data="uniformApp()" x-init="init()">
+    <div class="bg-animated"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon relative group" style="background: transparent; border: none; box-shadow: none;">
+                    <div class="relative w-full h-full" style="animation: rotateLogo 3s linear infinite;">
+                        <img src="https://media.discordapp.net/attachments/1473600607410589812/1475170778743050361/LOGO_Shark_Community_OK02-01.png?ex=69c9ff19&is=69c8ad99&hm=7d43a72f4ca3edfcbce33f359ff3cb675641cfb2e2327961c1b727ae53cddc61&=&format=webp&quality=lossless&width=1113&height=594" 
+                             alt="Shark Police Logo" 
+                             class="w-full h-full object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <h1 class="flex items-center gap-2">
+                        <span class="bg-gradient-to-r from-sky-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent font-bold relative">
+                            Shark Police
+                            <div class="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-sky-500 to-indigo-500 opacity-50"></div>
+                        </span>
+                        <i class="fas fa-shark text-sky-400 animate-bounce text-sm" style="animation-duration: 2s;"></i>
+                    </h1>
+                    <span class="text-xs bg-gradient-to-r from-slate-500 to-slate-600 bg-clip-text text-transparent">v.0.0.1</span>
+                </div>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-calculator"></i>
+                    <span>คำนวณค่าปรับ</span>
+                </a>
+                <a href="index.html#rules" class="nav-link">
+                    <i class="fas fa-book-open"></i>
+                    <span>กฎระเบียบ</span>
+                </a>
+                <a href="index.html#fines-table" class="nav-link">
+                    <i class="fas fa-table"></i>
+                    <span>ตารางค่าปรับ</span>
+                </a>
+                <a href="index.html#arrest" class="nav-link">
+                    <i class="fas fa-handcuffs"></i>
+                    <span>การจับกุม</span>
+                </a>
+                <a href="announcements.html" class="nav-link">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>ข้อความประกาศ</span>
+                </a>
+                <a href="uniforms.html" class="nav-link active">
+                    <i class="fas fa-tshirt"></i>
+                    <span>เลขชุด</span>
+                </a>
+                <a href="guides.html" class="nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>แนวทางปฏิบัติ</span>
+                </a>
+            </nav>
+
+            <div class="text-right">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <!-- Creator Credit -->
+            <div class="text-center mb-6">
+                <div class="creator-badge inline-flex">
+                    <i class="fas fa-code"></i>
+                    <span>Created by <strong class="text-sky-400">Kaneji Nightfall</strong></span>
+                </div>
+            </div>
+
+            <!-- Page Title -->
+            <div class="card mb-6">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">เลขชุดเครื่องแบบตำรวจ</div>
+                        <div class="card-subtitle">คลิกเพื่อคัดลอกเลขชุดเครื่องแบบ</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- ผู้ชาย -->
+                    <div class="bg-gradient-to-br from-blue-900/30 to-slate-800/50 rounded-xl p-5 border border-blue-500/30">
+                        <div class="flex items-center gap-3 mb-4 pb-4 border-b border-blue-500/20">
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                                <i class="fas fa-male text-blue-400 text-xl"></i>
+                            </div>
+                            <h5 class="text-white font-semibold text-lg">ผู้ชาย</h5>
+                        </div>
+                        <div class="space-y-2">
+                            <button @click="copyUniform('วอม ผช 45')" 
+                                    class="w-full text-left p-3 rounded-lg bg-slate-800/50 border border-slate-700 hover:border-blue-500/50 hover:bg-blue-900/20 transition-all group flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-tshirt text-blue-400 group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-slate-300">วอม ผช</span>
+                                </div>
+                                <span class="text-blue-400 font-mono font-bold text-lg group-hover:scale-110 transition-transform">45</span>
+                            </button>
+                            
+                            <button @click="copyUniform('ฮู้ด ผช 37')" 
+                                    class="w-full text-left p-3 rounded-lg bg-slate-800/50 border border-slate-700 hover:border-blue-500/50 hover:bg-blue-900/20 transition-all group flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-user-astronaut text-blue-400 group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-slate-300">ฮู้ด ผช</span>
+                                </div>
+                                <span class="text-blue-400 font-mono font-bold text-lg group-hover:scale-110 transition-transform">37</span>
+                            </button>
+                            
+                            <button @click="copyUniform('โปโล ผช 46')" 
+                                    class="w-full text-left p-3 rounded-lg bg-slate-800/50 border border-slate-700 hover:border-blue-500/50 hover:bg-blue-900/20 transition-all group flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-tshirt text-blue-400 group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-slate-300">โปโล ผช</span>
+                                </div>
+                                <span class="text-blue-400 font-mono font-bold text-lg group-hover:scale-110 transition-transform">46</span>
+                            </button>
+                            
+                            <button @click="copyUniform('สูทปิด 789')" 
+                                    class="w-full text-left p-3 rounded-lg bg-slate-800/50 border border-slate-700 hover:border-blue-500/50 hover:bg-blue-900/20 transition-all group flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-user-tie text-blue-400 group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-slate-300">สูทปิด</span>
+                                </div>
+                                <span class="text-blue-400 font-mono font-bold text-lg group-hover:scale-110 transition-transform">789</span>
+                            </button>
+                            
+                            <button @click="copyUniform('สูทเปิด 790')" 
+                                    class="w-full text-left p-3 rounded-lg bg-slate-800/50 border border-slate-700 hover:border-blue-500/50 hover:bg-blue-900/20 transition-all group flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-user-tie text-blue-400 group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-slate-300">สูทเปิด</span>
+                                </div>
+                                <span class="text-blue-400 font-mono font-bold text-lg group-hover:scale-110 transition-transform">790</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ผู้หญิง -->
+                    <div class="bg-gradient-to-br from-pink-900/30 to-slate-800/50 rounded-xl p-5 border border-pink-500/30">
+                        <div class="flex items-center gap-3 mb-4 pb-3 border-b border-pink-500/20">
+                            <div class="w-12 h-12 rounded-xl bg-pink-500/20 flex items-center justify-center">
+                                <i class="fas fa-female text-pink-400 text-xl"></i>
+                            </div>
+                            <h5 class="text-white font-semibold text-lg">ผู้หญิง</h5>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="text-xs text-slate-400 mb-2 px-1">
+                                <i class="fas fa-layer-group mr-1"></i>ชุดสูท
+                            </div>
+                            
+                            <button @click="copyUniform('เสื้อนอกสูท 728/729')" 
+                                    class="w-full text-left p-3 rounded-lg bg-slate-800/50 border border-slate-700 hover:border-pink-500/50 hover:bg-pink-900/20 transition-all group flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-tshirt text-pink-400 group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-slate-300">เสื้อนอก</span>
+                                </div>
+                                <span class="text-pink-400 font-mono font-bold text-lg group-hover:scale-110 transition-transform">728/729</span>
+                            </button>
+                            
+                            <button @click="copyUniform('เสื้อเกราะ 195')" 
+                                    class="w-full text-left p-3 rounded-lg bg-slate-800/50 border border-slate-700 hover:border-pink-500/50 hover:bg-pink-900/20 transition-all group flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-shield-alt text-pink-400 group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-slate-300">เสื้อเกราะ</span>
+                                </div>
+                                <span class="text-pink-400 font-mono font-bold text-lg group-hover:scale-110 transition-transform">195</span>
+                            </button>
+                            
+                            <div class="text-xs text-slate-400 mb-2 mt-3 px-1">
+                                <i class="fas fa-mask mr-1"></i>ชุดมอด
+                            </div>
+                            
+                            <button @click="copyUniform('ชุดมอด เสื้อนอก 32')" 
+                                    class="w-full text-left p-3 rounded-lg bg-slate-800/50 border border-slate-700 hover:border-pink-500/50 hover:bg-pink-900/20 transition-all group flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-tshirt text-pink-400 group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-slate-300">เสื้อนอก</span>
+                                </div>
+                                <span class="text-pink-400 font-mono font-bold text-lg group-hover:scale-110 transition-transform">32</span>
+                            </button>
+                            
+                            <button @click="copyUniform('ชุดมอด เสื้อนอก 23')" 
+                                    class="w-full text-left p-3 rounded-lg bg-slate-800/50 border border-slate-700 hover:border-pink-500/50 hover:bg-pink-900/20 transition-all group flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-tshirt text-pink-400 group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-slate-300">เสื้อนอก</span>
+                                </div>
+                                <span class="text-pink-400 font-mono font-bold text-lg group-hover:scale-110 transition-transform">23</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Note -->
+                <div class="mt-6 p-4 bg-sky-900/20 border border-sky-500/30 rounded-xl flex items-start gap-3">
+                    <i class="fas fa-info-circle text-sky-400 mt-0.5"></i>
+                    <p class="text-slate-300 text-sm">คลิกที่ชุดเพื่อคัดลอกเลขชุด สามารถนำไปใช้ใส่บิลหรือแจ้งเจ้าหน้าที่ท่านอื่นได้</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container">
+        <template x-for="notification in notifications" :key="notification.id">
+            <div 
+                class="toast"
+                :class="notification.type"
+                @click="removeNotification(notification.id)"
+            >
+                <i class="fas toast-icon" 
+                   :class="{
+                       'fa-check-circle': notification.type === 'success',
+                       'fa-exclamation-circle': notification.type === 'error',
+                       'fa-info-circle': notification.type === 'info'
+                   }">
+                </i>
+                <span class="toast-message" x-text="notification.message"></span>
+            </div>
+        </template>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-credit">
+            <p>Shark Police v.0.0.1 | Created by <strong class="text-sky-400">Kaneji Nightfall</strong></p>
+        </div>
+    </footer>
+
+    <!-- App Script -->
+    <script>
+        function uniformApp() {
+            return {
+                notifications: [],
+
+                init() {
+                    // Header scroll effect
+                    window.addEventListener('scroll', () => {
+                        const header = document.querySelector('.header');
+                        if (window.scrollY > 50) {
+                            header.classList.add('scrolled');
+                        } else {
+                            header.classList.remove('scrolled');
+                        }
+                    });
+                },
+
+                copyUniform(message) {
+                    navigator.clipboard.writeText(message).then(() => {
+                        this.showNotification('คัดลอกเลขชุดแล้ว!', 'success');
+                    }).catch(() => {
+                        this.showNotification('ไม่สามารถคัดลอกได้', 'error');
+                    });
+                },
+
+                showNotification(message, type = 'info') {
+                    const id = Date.now();
+                    this.notifications.push({ id, message, type });
+                    setTimeout(() => {
+                        this.notifications = this.notifications.filter(n => n.id !== id);
+                    }, 3000);
+                },
+
+                removeNotification(id) {
+                    this.notifications = this.notifications.filter(n => n.id !== id);
+                }
+            };
+        }
+    </script>
+    
+    <!-- Visual Effects -->
+    <script src="assets/js/visual-effects.js"></script>
+    
+    <!-- Anti-Copy Protection -->
+    <script src="assets/js/anti-copy.js"></script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - ไม่พบหน้าที่คุณต้องการ | Shark Police</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: #020617;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .bg-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(15, 23, 42, 0.8) 0%, #020617 100%);
+        }
+
+        .error-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 1rem;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 40px rgba(14, 165, 233, 0.8));
+            }
+        }
+
+        .error-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .shark-icon {
+            font-size: 4rem;
+            color: #0ea5e9;
+            margin-bottom: 1.5rem;
+            animation: swim 3s ease-in-out infinite;
+        }
+
+        @keyframes swim {
+            0%, 100% {
+                transform: translateX(-10px) rotate(-5deg);
+            }
+            50% {
+                transform: translateX(10px) rotate(5deg);
+            }
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+            background: rgba(14, 165, 233, 0.1);
+            border-color: rgba(14, 165, 233, 0.4);
+        }
+
+        @media (max-width: 640px) {
+            .error-code {
+                font-size: 5rem;
+            }
+
+            .error-title {
+                font-size: 1.5rem;
+            }
+
+            .shark-icon {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animated"></div>
+
+    <div class="error-container">
+        <div class="shark-icon">
+            <i class="fas fa-shark"></i>
+        </div>
+
+        <div class="error-code">404</div>
+
+        <h1 class="error-title">ไม่พบหน้าที่คุณต้องการ</h1>
+
+        <p class="error-message">
+            หน้าเว็บที่คุณกำลังมองหาอาจถูกลบ ย้าย หรือไม่มีอยู่จริง<br>
+            กลับไปหน้าหลักหรือเลือกเมนูด้านล่าง
+        </p>
+
+        <a href="index.html" class="btn-home">
+            <i class="fas fa-home"></i>
+            กลับหน้าหลัก
+        </a>
+
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-calculator"></i>
+                คำนวณค่าปรับ
+            </a>
+            <a href="announcements.html" class="nav-link">
+                <i class="fas fa-bullhorn"></i>
+                ข้อความประกาศ
+            </a>
+            <a href="uniforms.html" class="nav-link">
+                <i class="fas fa-tshirt"></i>
+                เลขชุด
+            </a>
+            <a href="guides.html" class="nav-link">
+                <i class="fas fa-clipboard-list"></i>
+                แนวทางปฏิบัติ
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Redirect to home after 30 seconds
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 30000);
+    </script>
+</body>
+</html>

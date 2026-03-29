@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shark Police v.0.0.1 - แนวทางปฏิบัติ</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.1/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.1/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        [x-cloak] { display: none !important; }
+
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        .guide-card {
+            transition: all 0.3s ease;
+        }
+
+        .guide-card:hover {
+            transform: translateY(-4px);
+        }
+
+        @keyframes rotateLogo {
+            0% {
+                transform: perspective(500px) rotateY(0deg);
+            }
+            100% {
+                transform: perspective(500px) rotateY(360deg);
+            }
+        }
+    </style>
+</head>
+<body x-data="guideApp()" x-init="init()">
+    <div class="bg-animated"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon relative group" style="background: transparent; border: none; box-shadow: none;">
+                    <div class="relative w-full h-full" style="animation: rotateLogo 3s linear infinite;">
+                        <img src="https://media.discordapp.net/attachments/1473600607410589812/1475170778743050361/LOGO_Shark_Community_OK02-01.png?ex=69c9ff19&is=69c8ad99&hm=7d43a72f4ca3edfcbce33f359ff3cb675641cfb2e2327961c1b727ae53cddc61&=&format=webp&quality=lossless&width=1113&height=594" 
+                             alt="Shark Police Logo" 
+                             class="w-full h-full object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <h1 class="flex items-center gap-2">
+                        <span class="bg-gradient-to-r from-sky-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent font-bold relative">
+                            Shark Police
+                            <div class="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-sky-500 to-indigo-500 opacity-50"></div>
+                        </span>
+                        <i class="fas fa-shark text-sky-400 animate-bounce text-sm" style="animation-duration: 2s;"></i>
+                    </h1>
+                    <span class="text-xs bg-gradient-to-r from-slate-500 to-slate-600 bg-clip-text text-transparent">v.0.0.1</span>
+                </div>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-calculator"></i>
+                    <span>คำนวณค่าปรับ</span>
+                </a>
+                <a href="index.html#rules" class="nav-link">
+                    <i class="fas fa-book-open"></i>
+                    <span>กฎระเบียบ</span>
+                </a>
+                <a href="index.html#fines-table" class="nav-link">
+                    <i class="fas fa-table"></i>
+                    <span>ตารางค่าปรับ</span>
+                </a>
+                <a href="index.html#arrest" class="nav-link">
+                    <i class="fas fa-handcuffs"></i>
+                    <span>การจับกุม</span>
+                </a>
+                <a href="announcements.html" class="nav-link">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>ข้อความประกาศ</span>
+                </a>
+                <a href="uniforms.html" class="nav-link">
+                    <i class="fas fa-tshirt"></i>
+                    <span>เลขชุด</span>
+                </a>
+                <a href="guides.html" class="nav-link active">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>แนวทางปฏิบัติ</span>
+                </a>
+            </nav>
+
+            <div class="text-right">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <!-- Creator Credit -->
+            <div class="text-center mb-6">
+                <div class="creator-badge inline-flex">
+                    <i class="fas fa-code"></i>
+                    <span>Created by <strong class="text-sky-400">Kaneji Nightfall</strong></span>
+                </div>
+            </div>
+
+            <!-- Page Title -->
+            <div class="card mb-6">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">แนวทางปฏิบัติ</div>
+                        <div class="card-subtitle">ขั้นตอนและวิธีการปฏิบัติงานตำรวจ</div>
+                    </div>
+                </div>
+
+                <!-- Transfer Case Guide -->
+                <div class="guide-card mb-6 bg-gradient-to-br from-emerald-900/20 to-slate-800/50 rounded-xl p-5 border border-emerald-500/30">
+                    <div class="flex items-center gap-3 mb-4 pb-4 border-b border-emerald-500/20">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                            <i class="fas fa-money-bill-transfer text-emerald-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-white font-semibold text-lg">📌 วิธีดำเนินคดี - แจ้งความโอนเงินผิด</h3>
+                            <p class="text-slate-400 text-sm">ขั้นตอนการรับแจ้งความกรณีโอนเงินผิด</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Step 1 -->
+                        <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold flex-shrink-0">1</div>
+                                <div class="flex-1">
+                                    <h4 class="text-white font-medium mb-2">ขอข้อมูลเจ้าของเงิน</h4>
+                                    <ul class="text-slate-400 text-sm space-y-2">
+                                        <li class="flex items-center gap-2">
+                                            <i class="fas fa-phone text-emerald-400"></i>
+                                            <span>ขอเบอร์โทรศัพท์เจ้าของเงิน</span>
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <i class="fas fa-image text-emerald-400"></i>
+                                            <span>ขอให้ส่งหลักฐานการโอนผิดที่เห็นชื่อคนโอน</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold flex-shrink-0">2</div>
+                                <div class="flex-1">
+                                    <h4 class="text-white font-medium mb-2">ประกาศเรียกในประเทศ</h4>
+                                    <p class="text-slate-400 text-sm mb-3">ใช้คำสั่งประกาศต่อไปนี้ <strong>3 ครั้ง</strong> คูลดาวน์ครั้งละ <strong>10 นาที</strong></p>
+                                    
+                                    <button @click="copyText('ประกาศเรียก : คุณ Bonus Caramel รบกวนติดต่อที่ สน.ในเมือง เวลานี้ด้วยครับ')" 
+                                            class="w-full text-left p-3 rounded-lg bg-slate-700/50 border border-slate-600 hover:border-emerald-500/50 hover:bg-emerald-900/20 transition-all group">
+                                        <div class="flex items-center justify-between">
+                                            <code class="text-emerald-300 text-sm">ประกาศเรียก : คุณ Bonus Caramel รบกวนติดต่อที่ สน.ในเมือง เวลานี้ด้วยครับ</code>
+                                            <i class="fas fa-copy text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold flex-shrink-0">3</div>
+                                <div class="flex-1">
+                                    <h4 class="text-white font-medium mb-2">ประกาศในดิสคอร์ด</h4>
+                                    <p class="text-slate-400 text-sm">หลังจากประกาศครบ 3 ครั้งแล้ว ให้ประกาศในห้อง <code class="bg-slate-700 px-2 py-1 rounded text-emerald-300">ประกาศหมายเรียก</code> ในดิสคอร์ดประเทศ <strong>1 ครั้ง</strong></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold flex-shrink-0">4</div>
+                                <div class="flex-1">
+                                    <h4 class="text-white font-medium mb-2">ครบ 24 ชั่วโมง</h4>
+                                    <div class="bg-amber-900/20 border border-amber-500/30 rounded-lg p-3">
+                                        <p class="text-amber-200 text-sm">
+                                            <i class="fas fa-clock mr-2"></i>
+                                            หากครบ <strong>24 ชั่วโมง</strong> แล้วไม่มีการติดต่อกลับ สามารถยกเคสได้เลย แจ้งเจ้าของเงินให้เรียบร้อย แล้วปิดเคสเลยค่ะ
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Example Image -->
+                    <div class="mt-4 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
+                        <h4 class="text-white font-medium mb-3 flex items-center gap-2">
+                            <i class="fas fa-image text-emerald-400"></i>
+                            ตัวอย่างการประกาศ
+                        </h4>
+                        <div class="text-center">
+                            <img src="https://media.discordapp.net/attachments/1484824038055608342/1487480659940479067/image.png?ex=69c9f491&is=69c8a311&hm=199578f607e41bae9a8c923f29699580f6846f1397d21c6ac6754d4cc2517318&=&format=webp&quality=lossless" 
+                                 alt="ตัวอย่างการประกาศเรียก" 
+                                 class="rounded-lg border border-emerald-500/30 max-w-full mx-auto"
+                                 style="max-height: 300px; object-fit: contain;">
+                        </div>
+                    </div>
+
+                    <!-- Quick Tips -->
+                    <div class="mt-4 p-4 bg-emerald-900/20 border border-emerald-500/30 rounded-lg">
+                        <h4 class="text-emerald-300 font-medium mb-2 flex items-center gap-2">
+                            <i class="fas fa-lightbulb"></i>
+                            เคล็ดลับ
+                        </h4>
+                        <ul class="text-slate-400 text-sm space-y-1">
+                            <li>• <strong>บันทึกข้อมูล</strong> ชื่อ-เบอร์โทรศัพท์ ของเจ้าของเงินไว้เป็นหลักฐาน</li>
+                            <li>• <strong>แคปหน้าจอ</strong> หลักฐานการโอนเงินที่เจ้าของเงินส่งให้</li>
+                            <li>• <strong>ตั้งเวลา</strong> เตือนตัวเองเพื่อประกาศแต่ละครั้งให้ตรงเวลา</li>
+                            <li>• <strong>บันทึกเวลา</strong> ที่ประกาศแต่ละครั้งเพื่อใช้อ้างอิง</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- More Guides Coming Soon -->
+                <div class="text-center py-8">
+                    <div class="inline-flex items-center gap-3 text-slate-500">
+                        <i class="fas fa-hourglass-half text-2xl"></i>
+                        <span>แนวทางปฏิบัติอื่นๆ กำลังจะมาเร็วๆ นี้...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container">
+        <template x-for="notification in notifications" :key="notification.id">
+            <div 
+                class="toast"
+                :class="notification.type"
+                @click="removeNotification(notification.id)"
+            >
+                <i class="fas toast-icon" 
+                   :class="{
+                       'fa-check-circle': notification.type === 'success',
+                       'fa-exclamation-circle': notification.type === 'error',
+                       'fa-info-circle': notification.type === 'info'
+                   }">
+                </i>
+                <span class="toast-message" x-text="notification.message"></span>
+            </div>
+        </template>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-credit">
+            <p>Shark Police v.0.0.1 | Created by <strong class="text-sky-400">Kaneji Nightfall</strong></p>
+        </div>
+    </footer>
+
+    <!-- App Script -->
+    <script>
+        function guideApp() {
+            return {
+                notifications: [],
+
+                init() {
+                    window.addEventListener('scroll', () => {
+                        const header = document.querySelector('.header');
+                        if (window.scrollY > 50) {
+                            header.classList.add('scrolled');
+                        } else {
+                            header.classList.remove('scrolled');
+                        }
+                    });
+                },
+
+                copyText(message) {
+                    navigator.clipboard.writeText(message).then(() => {
+                        this.showNotification('คัดลอกข้อความแล้ว!', 'success');
+                    }).catch(() => {
+                        this.showNotification('ไม่สามารถคัดลอกได้', 'error');
+                    });
+                },
+
+                showNotification(message, type = 'info') {
+                    const id = Date.now();
+                    this.notifications.push({ id, message, type });
+                    setTimeout(() => {
+                        this.notifications = this.notifications.filter(n => n.id !== id);
+                    }, 3000);
+                },
+
+                removeNotification(id) {
+                    this.notifications = this.notifications.filter(n => n.id !== id);
+                }
+            };
+        }
+    </script>
+    
+    <!-- Visual Effects -->
+    <script src="assets/js/visual-effects.js"></script>
+    
+    <!-- Anti-Copy Protection -->
+    <script src="assets/js/anti-copy.js"></script>
+</body>
+</html>

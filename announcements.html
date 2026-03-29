@@ -1,0 +1,522 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shark Police v.0.0.1 - ข้อความประกาศ</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.1/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.1/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        @keyframes rotateLogo {
+            0% {
+                transform: perspective(500px) rotateY(0deg);
+            }
+            100% {
+                transform: perspective(500px) rotateY(360deg);
+            }
+        }
+
+        /* Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            box-shadow: 0 25px 80px rgba(14, 165, 233, 0.2);
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-backdrop.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-close {
+            background: rgba(239, 68, 68, 0.2);
+            border: none;
+            color: #ef4444;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.4);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .announcement-text {
+            color: #cbd5e1;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .btn-copy {
+            flex: 1;
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
+        }
+    </style>
+</head>
+<body x-data="announcementApp()" x-init="init()">
+    <div class="bg-animated"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon relative group" style="background: transparent; border: none; box-shadow: none;">
+                    <div class="relative w-full h-full" style="animation: rotateLogo 3s linear infinite;">
+                        <img src="https://media.discordapp.net/attachments/1473600607410589812/1475170778743050361/LOGO_Shark_Community_OK02-01.png?ex=69c9ff19&is=69c8ad99&hm=7d43a72f4ca3edfcbce33f359ff3cb675641cfb2e2327961c1b727ae53cddc61&=&format=webp&quality=lossless&width=1113&height=594" 
+                             alt="Shark Police Logo" 
+                             class="w-full h-full object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <h1 class="flex items-center gap-2">
+                        <span class="bg-gradient-to-r from-sky-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent font-bold relative">
+                            Shark Police
+                            <div class="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-sky-500 to-indigo-500 opacity-50"></div>
+                        </span>
+                        <i class="fas fa-shark text-sky-400 animate-bounce text-sm" style="animation-duration: 2s;"></i>
+                    </h1>
+                    <span class="text-xs bg-gradient-to-r from-slate-500 to-slate-600 bg-clip-text text-transparent">v.0.0.1</span>
+                </div>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-calculator"></i>
+                    <span>คำนวณค่าปรับ</span>
+                </a>
+                <a href="index.html#rules" class="nav-link">
+                    <i class="fas fa-book-open"></i>
+                    <span>กฎระเบียบ</span>
+                </a>
+                <a href="index.html#fines-table" class="nav-link">
+                    <i class="fas fa-table"></i>
+                    <span>ตารางค่าปรับ</span>
+                </a>
+                <a href="index.html#arrest" class="nav-link">
+                    <i class="fas fa-handcuffs"></i>
+                    <span>การจับกุม</span>
+                </a>
+                <a href="announcements.html" class="nav-link active">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>ข้อความประกาศ</span>
+                </a>
+                <a href="uniforms.html" class="nav-link">
+                    <i class="fas fa-tshirt"></i>
+                    <span>เลขชุด</span>
+                </a>
+                <a href="guides.html" class="nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>แนวทางปฏิบัติ</span>
+                </a>
+            </nav>
+
+            <div class="text-right">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <!-- Creator Credit -->
+            <div class="text-center mb-6">
+                <div class="creator-badge inline-flex">
+                    <i class="fas fa-code"></i>
+                    <span>Created by <strong class="text-sky-400">Kaneji Nightfall</strong></span>
+                </div>
+            </div>
+
+            <!-- Page Title -->
+            <div class="card mb-6">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">ข้อความประกาศ</div>
+                        <div class="card-subtitle">คลิกเพื่อคัดลอกข้อความประกาศใช้งาน</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <!-- Police Department Announcement - Featured -->
+                    <button @click="openModal('🦈 ประกาศจากกรมตำรวจ 🦈\nการเล่นของตำรวจ !!\n\n📢 เรื่องไม้เน้นย้ำ !!\nไม้ 1 คนถึงจุดเคสงานดำต่างๆเป็นคนแรก\nไม้ 2 คนถึงจุดหลังคนแรก หรือ กำลังเสริม\nไม้ 3 คนถึงจุดหลังคนที่สอง หรือ กำลังเสริม\n\nระหว่างการไล่ล่า ไม้ 2 - 3 ควรให้พื้นที่ในการเล่นของไม้ 1 ไม่แทรกไม่แย่งไม้กัน หรือ สื่อสารกันดีๆเล่นกันให้เป็นทีมและเข้าใจกัน\nใครที่จะแทรกเข้ามาช่วยระหว่างทางนั้น ควรสื่อสารกันก่อนว่าจะเข้ามาช่วยเคสตรงนั้น ควรถามก่อนว่าเคสนี้ครบไม้หรือยัง บางทีเขาช่วยไล่กันมาโดนคนอื่นมาแทรกไม้ทำให้เขาหลุดขบวน ฝากเรื่องสื่อสารกันเยอะๆครับ\n\nส่วนเวลาเคสนั้นๆจบ ไม้ 1 จะมีสิทธิ์ในการทำเคสนั้นๆก่อนเสมอ ไม่แย่งกันทำเคสของเจ้าของเคสที่เป็นไม้ 1 ทำให้เกิดการไม่พอใจกันภายใน สน. ควรคำนึงถึงคนมาก่อนเสมอ เล่นด้วยกันให้สนุกครับ ( หากฝ่าฝืนมีโทษ )\n\n📢 การไล่เคส รักษาระยะห่างจากตัวรถผู้ต้องหากันหน่อยนะครับเรื่องนี้ Feedback เยอะ ไม่ต้องรีบไล่ ใช้ระยะเล่นเอา เพราะอาจจะเกิดภาพไม่ตรงหรืออื่นๆ หากตำรวจคนไหนอัดโกโปรได้อัดไว้เซฟตัวเองด้วยนะครับ\n📢 การใช้วิทยุสื่อสาร ( วอ ) สื่อสารกันเยอะๆนะครับ\n📢 เรื่องทำคดีเน้นย้ำ !!\nลงเคสทำคดีทุกครั้งต้องเห็นข้อมูลผู้ต้องหาครบถ้วน ชื่อ/รูปลักษณ์ผู้ต้องหา ลงข้อมูลเคสให้ครบถ้วน ชื่อคดี/ค่าปรับ/แท็กเพื่อนร่วมเคสให้ถูกต้อง\nเน้นย้ำห้ามแท็กคนที่ไม่ได้ไปไล่เคสช่วยเด็ดขาด หากจับได้จะลบเคสโดยไม่ต้องบอก เรียกมารับโทษวินัย\n(การกระทำเหล่านี้ถือว่าโกง เนื่องจากสน.เราปล่อยให้ยืนเล่นยืนเหมอได้ซึ่งได้รับ Playcheck แล้วยังโกงอาจจะมีโทษตามมา )')"
+                            class="text-left p-4 rounded-xl bg-gradient-to-br from-red-900/30 to-slate-800/50 border border-red-500/50 hover:border-red-400 hover:bg-red-900/40 transition-all text-slate-300 group relative overflow-hidden">
+                        <div class="absolute top-0 right-0 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-bl-lg">NEW</div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-lg bg-red-500/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-shield-alt text-red-400 text-xl"></i>
+                            </div>
+                            <div>
+                                <span class="text-white font-bold text-base">🦈 ประกาศจากกรมตำรวจ</span>
+                                <p class="text-xs text-red-300 mt-0.5">การเล่นของตำรวจ - เรื่องไม้และการทำคดี</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400 pl-13 leading-relaxed">เรื่องไม้เน้นย้ำ !! ไม้ 1/2/3, การสื่อสาร, การไล่เคส, การใช้วอ, การทำคดี ห้ามแท็กคนไม่ไปไล่</p>
+                    </button>
+
+                    <button @click="openModal('ประเทศรีอีก 15 นาที งดการทำงานทุกชนิดหากฝ่าฝืนสามารถจับและหากหลบหนีสามารถใช้มาตรการพิเศษได้ทันที')"
+                            class="text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-amber-500/50 hover:bg-amber-900/20 transition-all text-slate-300 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-clock text-amber-400"></i>
+                            </div>
+                            <span class="text-white font-medium">ประเทศรีอีก 15 นาที</span>
+                        </div>
+                        <p class="text-sm text-slate-400 pl-13">งดการทำงานทุกชนิดหากฝ่าฝืนสามารถจับและหากหลบหนีสามารถใช้มาตรการพิเศษได้ทันที</p>
+                    </button>
+
+                    <button @click="openModal('อัพเดทกฎตำรวจเพิ่มเติมรบกวนประชาชน อ่านกฎเพิ่มเติมก่อนทำงานดำด้วยนะครับ')" 
+                            class="text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-sky-500/50 hover:bg-sky-900/20 transition-all text-slate-300 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-lg bg-sky-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-book text-sky-400"></i>
+                            </div>
+                            <span class="text-white font-medium">อัพเดทกฎตำรวจ</span>
+                        </div>
+                        <p class="text-sm text-slate-400 pl-13">รบกวนประชาชน อ่านกฎเพิ่มเติมก่อนทำงานดำด้วยนะครับ</p>
+                    </button>
+
+                    <button @click="openModal('วันนี้เวลา 20.00 น. มีประชุมตำรวจทางตำรวจขออนุญาตออกเวร เพื่อการประชุมหากประชุมเสร็จจะเข้าเวรโดยเร็ว')" 
+                            class="text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-indigo-500/50 hover:bg-indigo-900/20 transition-all text-slate-300 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-users text-indigo-400"></i>
+                            </div>
+                            <span class="text-white font-medium">ประชุมตำรวจ 20.00 น.</span>
+                        </div>
+                        <p class="text-sm text-slate-400 pl-13">ขออนุญาตออกเวรเพื่อการประชุม หากประชุมเสร็จจะเข้าเวรโดยเร็ว</p>
+                    </button>
+
+                    <button @click="openModal('ตำรวจที่เข้าเวรปฎิบัติงานขณะนี้ที่ยังไม่ได้เข้าวอรบกวนเข้าวอด้วยครับ')" 
+                            class="text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-green-500/50 hover:bg-green-900/20 transition-all text-slate-300 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-headset text-green-400"></i>
+                            </div>
+                            <span class="text-white font-medium">แจ้งเข้าวอ</span>
+                        </div>
+                        <p class="text-sm text-slate-400 pl-13">ตำรวจที่เข้าเวรปฎิบัติงานขณะนี้ที่ยังไม่ได้เข้าวอรบกวนเข้าวอด้วยครับ</p>
+                    </button>
+
+                    <button @click="openModal('ประกาศเรียก : คุณ Bonus Caramel รบกวนติดต่อที่ สน.ในเมือง เวลานี้ด้วยครับ')" 
+                            class="text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-red-500/50 hover:bg-red-900/20 transition-all text-slate-300 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-bell text-red-400"></i>
+                            </div>
+                            <span class="text-white font-medium">ประกาศเรียก</span>
+                        </div>
+                        <p class="text-sm text-slate-400 pl-13">รบกวนติดต่อที่ สน.ในเมือง เวลานี้ด้วยครับ</p>
+                    </button>
+
+                    <button @click="openModal('รบกวนประชาชนที่ทำงานดำ อ่านกฎเพิ่มเติมก่อนทำงานดำด้วยนะครับ')" 
+                            class="text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-purple-500/50 hover:bg-purple-900/20 transition-all text-slate-300 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-exclamation-circle text-purple-400"></i>
+                            </div>
+                            <span class="text-white font-medium">แจ้งเตือนอ่านกฎ</span>
+                        </div>
+                        <p class="text-sm text-slate-400 pl-13">รบกวนประชาชนที่ทำงานดำ อ่านกฎเพิ่มเติมก่อนทำงานดำด้วยนะครับ</p>
+                    </button>
+
+                    <button @click="openModal('ถ้าหากบริเวณนั้นมีเคสขึ้นจะถือว่าเป็นพื้นที่สุ่มเสี่ยง เจ้าหน้าที่สามารถเลือกไล่ได้ทุกคัน')" 
+                            class="text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-orange-500/50 hover:bg-orange-900/20 transition-all text-slate-300 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-car-crash text-orange-400"></i>
+                            </div>
+                            <span class="text-white font-medium">พื้นที่สุ่มเสี่ยง</span>
+                        </div>
+                        <p class="text-sm text-slate-400 pl-13">ถ้าหากบริเวณนั้นมีเคสขึ้นจะถือว่าเป็นพื้นที่สุ่มเสี่ยง เจ้าหน้าที่สามารถเลือกไล่ได้ทุกคัน</p>
+                    </button>
+
+                    <button @click="openModal('เปิดสอบตำรวจช่วงเวลา 19.00 น. - 21.00 น. เตรียมความพร้อมมาให้เรียบร้อย สามารถติดต่อในเมืองในช่วงเวลาได้เลย')" 
+                            class="text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-cyan-500/50 hover:bg-cyan-900/20 transition-all text-slate-300 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-clipboard-list text-cyan-400"></i>
+                            </div>
+                            <span class="text-white font-medium">เปิดสอบตำรวจ (19:00-21:00)</span>
+                        </div>
+                        <p class="text-sm text-slate-400 pl-13">เตรียมความพร้อมมาให้เรียบร้อย สามารถติดต่อในเมืองในช่วงเวลาได้เลย</p>
+                    </button>
+
+                    <button @click="openModal('เปิดสอบตำรวจช่วงเวลา 15.00 น. - 17.00 น. เตรียมความพร้อมมาให้เรียบร้อย สามารถติดต่อในเมืองในช่วงเวลาได้เลย')" 
+                            class="text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-cyan-500/50 hover:bg-cyan-900/20 transition-all text-slate-300 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-clipboard-list text-cyan-400"></i>
+                            </div>
+                            <span class="text-white font-medium">เปิดสอบตำรวจ (15:00-17:00)</span>
+                        </div>
+                        <p class="text-sm text-slate-400 pl-13">เตรียมความพร้อมมาให้เรียบร้อย สามารถติดต่อในเมืองในช่วงเวลาได้เลย</p>
+                    </button>
+
+                    <button @click="openModal('รบกวนออกจากพื้นที่เคอร์ฟิวภายใน 10 วิด้วยครับ เตือนครั้งที่ 1')" 
+                            class="text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-pink-500/50 hover:bg-pink-900/20 transition-all text-slate-300 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-moon text-pink-400"></i>
+                            </div>
+                            <span class="text-white font-medium">เตือนเคอร์ฟิว</span>
+                        </div>
+                        <p class="text-sm text-slate-400 pl-13">รบกวนออกจากพื้นที่เคอร์ฟิวภายใน 10 วิด้วยครับ เตือนครั้งที่ 1</p>
+                    </button>
+
+                    <button @click="openModal('รบกวนประชาชนที่จอดรถหน้า สน. เก็บรถด้วยครับ')" 
+                            class="text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-yellow-500/50 hover:bg-yellow-900/20 transition-all text-slate-300 group">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fas fa-parking text-yellow-400"></i>
+                            </div>
+                            <span class="text-white font-medium">แจ้งเก็บรถหน้า สน.</span>
+                        </div>
+                        <p class="text-sm text-slate-400 pl-13">รบกวนประชาชนที่จอดรถหน้า สน. เก็บรถด้วยครับ</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container">
+        <template x-for="notification in notifications" :key="notification.id">
+            <div 
+                class="toast"
+                :class="notification.type"
+                @click="removeNotification(notification.id)"
+            >
+                <i class="fas toast-icon" 
+                   :class="{
+                       'fa-check-circle': notification.type === 'success',
+                       'fa-exclamation-circle': notification.type === 'error',
+                       'fa-info-circle': notification.type === 'info'
+                   }">
+                </i>
+                <span class="toast-message" x-text="notification.message"></span>
+            </div>
+        </template>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-credit">
+            <p>Shark Police v.0.0.1 | Created by <strong class="text-sky-400">Kaneji Nightfall</strong></p>
+        </div>
+    </footer>
+
+    <!-- Modal Popup -->
+    <div class="modal-backdrop" 
+         :class="{ 'active': showModal }" 
+         @click.self="closeModal()" 
+         x-show="showModal" 
+         x-cloak>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-bullhorn text-sky-400"></i>
+                    <span x-text="modalTitle"></span>
+                </div>
+                <button class="modal-close" @click="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="announcement-text" x-text="modalContent"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-copy" @click="copyFromModal()">
+                    <i class="fas fa-copy"></i>
+                    <span>คัดลอกข้อความ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Script -->
+    <script>
+        function announcementApp() {
+            return {
+                notifications: [],
+                showModal: false,
+                modalTitle: '',
+                modalContent: '',
+
+                init() {
+                    // Header scroll effect
+                    window.addEventListener('scroll', () => {
+                        const header = document.querySelector('.header');
+                        if (window.scrollY > 50) {
+                            header.classList.add('scrolled');
+                        } else {
+                            header.classList.remove('scrolled');
+                        }
+                    });
+
+                    // Close modal on ESC key
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape' && this.showModal) {
+                            this.closeModal();
+                        }
+                    });
+                },
+
+                openModal(title, content) {
+                    this.modalTitle = title;
+                    this.modalContent = content.replace(/\\n/g, '\n');
+                    this.showModal = true;
+                    document.body.style.overflow = 'hidden';
+                },
+
+                closeModal() {
+                    this.showModal = false;
+                    document.body.style.overflow = '';
+                },
+
+                copyFromModal() {
+                    navigator.clipboard.writeText(this.modalContent).then(() => {
+                        this.showNotification('คัดลอกข้อความประกาศแล้ว!', 'success');
+                        setTimeout(() => this.closeModal(), 500);
+                    }).catch(() => {
+                        this.showNotification('ไม่สามารถคัดลอกได้', 'error');
+                    });
+                },
+
+                openModal(message) {
+                    navigator.clipboard.writeText(message).then(() => {
+                        this.showNotification('คัดลอกข้อความประกาศแล้ว!', 'success');
+                    }).catch(() => {
+                        this.showNotification('ไม่สามารถคัดลอกได้', 'error');
+                    });
+                },
+
+                showNotification(message, type = 'info') {
+                    const id = Date.now();
+                    this.notifications.push({ id, message, type });
+                    setTimeout(() => {
+                        this.notifications = this.notifications.filter(n => n.id !== id);
+                    }, 3000);
+                },
+
+                removeNotification(id) {
+                    this.notifications = this.notifications.filter(n => n.id !== id);
+                }
+            };
+        }
+    </script>
+    
+    <!-- Visual Effects -->
+    <script src="assets/js/visual-effects.js"></script>
+    
+    <!-- Anti-Copy Protection -->
+    <script src="assets/js/anti-copy.js"></script>
+</body>
+</html>
+

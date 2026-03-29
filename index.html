@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Kaneji Nightfall">
+    <meta name="copyright" content="Shark Police - All Rights Reserved">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Shark Police v.0.0.1 - ระบบคำนวณค่าปรับ</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.1/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.1/dist/sweetalert2.all.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+        
+        .calculator-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+        }
+        
+        .charges-section {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(14, 165, 233, 0.1);
+        }
+        
+        .category-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+        }
+        
+        .category-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(14, 165, 233, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid #0ea5e9;
+        }
+        
+        .category-header.red {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: #ef4444;
+        }
+        
+        .category-title {
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .charges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .charge-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            user-select: none;
+        }
+        
+        .charge-item:hover {
+            background: rgba(14, 165, 233, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .charge-item.selected {
+            background: rgba(14, 165, 233, 0.15);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+        
+        .charge-checkbox {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid #475569;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .charge-item.selected .charge-checkbox {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border-color: #0ea5e9;
+        }
+        
+        .charge-checkbox i {
+            color: #fff;
+            font-size: 0.75rem;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.2s ease;
+        }
+        
+        .charge-item.selected .charge-checkbox i {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .charge-info {
+            flex: 1;
+        }
+        
+        .charge-name {
+            color: #cbd5e1;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .charge-details {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
+        }
+        
+        .charge-fine {
+            color: #fbbf24;
+        }
+        
+        .charge-jail {
+            color: #f87171;
+        }
+        
+        .quantity-wrapper {
+            display: none;
+        }
+        
+        .charge-item.selected .quantity-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .quantity-input {
+            width: 60px;
+            padding: 0.4rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            text-align: center;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 0.875rem;
+        }
+        
+        .quantity-input:focus {
+            outline: none;
+            border-color: #0ea5e9;
+        }
+        
+        .money-input-wrapper {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        
+        .money-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .money-input:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+        }
+        
+        .result-panel {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+        
+        .result-main {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(99, 102, 241, 0.2));
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .result-main-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .bail-card {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 3px solid #475569;
+            transition: all 0.3s ease;
+        }
+        
+        .bail-card.recommended {
+            background: rgba(16, 185, 129, 0.1);
+            border-left-color: #10b981;
+        }
+        
+        .bail-card.red-case {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: #ef4444;
+        }
+        
+        .bail-option-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .bail-option-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .bail-option-details strong {
+            color: #fff;
+        }
+        
+        .bail-note {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        
+        .red-badge {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .creator-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(99, 102, 241, 0.2));
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+        
+        .creator-badge strong {
+            color: #0ea5e9;
+        }
+    </style>
+</head>
+<body x-data="calculatorApp()" x-init="init()">
+    <div class="bg-animated"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon relative group" style="background: transparent; border: none; box-shadow: none;">
+                    <div class="relative w-full h-full" style="animation: rotateLogo 3s linear infinite;">
+                        <img src="https://media.discordapp.net/attachments/1473600607410589812/1475170778743050361/LOGO_Shark_Community_OK02-01.png?ex=69c9ff19&is=69c8ad99&hm=7d43a72f4ca3edfcbce33f359ff3cb675641cfb2e2327961c1b727ae53cddc61&=&format=webp&quality=lossless&width=1113&height=594" 
+                             alt="Shark Police Logo" 
+                             class="w-full h-full object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <h1 class="flex items-center gap-2">
+                        <span class="bg-gradient-to-r from-sky-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent font-bold relative">
+                            Shark Police
+                            <div class="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-sky-500 to-indigo-500 opacity-50"></div>
+                        </span>
+                        <i class="fas fa-shark text-sky-400 animate-bounce text-sm" style="animation-duration: 2s;"></i>
+                    </h1>
+                    <span class="text-xs bg-gradient-to-r from-slate-500 to-slate-600 bg-clip-text text-transparent">v.0.0.1</span>
+                </div>
+            </a>
+            
+            <nav class="nav">
+                <a href="#calculator" class="nav-link active">
+                    <i class="fas fa-calculator"></i>
+                    <span>คำนวณค่าปรับ</span>
+                </a>
+                <a href="#rules" class="nav-link">
+                    <i class="fas fa-book-open"></i>
+                    <span>กฎระเบียบ</span>
+                </a>
+                <a href="#fines-table" class="nav-link">
+                    <i class="fas fa-table"></i>
+                    <span>ตารางค่าปรับ</span>
+                </a>
+                <a href="#arrest" class="nav-link">
+                    <i class="fas fa-handcuffs"></i>
+                    <span>การจับกุม</span>
+                </a>
+                <a href="announcements.html" class="nav-link">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>ข้อความประกาศ</span>
+                </a>
+                <a href="uniforms.html" class="nav-link">
+                    <i class="fas fa-tshirt"></i>
+                    <span>เลขชุด</span>
+                </a>
+                <a href="guides.html" class="nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>แนวทางปฏิบัติ</span>
+                </a>
+            </nav>
+            
+            <div class="text-right">
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container mx-auto px-4">
+            <!-- Creator Credit -->
+            <div class="text-center mb-6">
+                <div class="creator-badge inline-flex">
+                    <i class="fas fa-code"></i>
+                    <span>Created by <strong class="text-sky-400">Kaneji Nightfall</strong></span>
+                </div>
+            </div>
+            
+            <!-- Rules Section -->
+            <div id="rules" class="mb-8" x-show="currentSection === 'rules'" x-cloak>
+                <!-- Rules Grid -->
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">กฎระเบียบการปฏิบัติหน้าที่</div>
+                            <div class="card-subtitle">มาตรฐานและระเบียบปฏิบัติสำหรับเจ้าหน้าที่ตำรวจ</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- การเข้าเวร -->
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 rounded-lg bg-sky-500/20 flex items-center justify-center">
+                                    <i class="fas fa-user-shield text-sky-400"></i>
+                                </div>
+                                <h3 class="text-white font-semibold">การเข้าเวร</h3>
+                            </div>
+                            <ul class="text-slate-400 text-sm space-y-2">
+                                <li>• เข้าเวรแล้วต้องเข้าวอทุกครั้ง ตามหมายเลขวอหน่วยงาน</li>
+                                <li>• ต้องใส่ชุดเครื่องแบบเจ้าหน้าที่ตำรวจทุกครั้งที่เข้าเวร</li>
+                                <li>• เจ้าหน้าที่ต้องปฏิบัติอย่างยุติธรรมและเป็นไปตามกฎ</li>
+                                <li>• ต้องดำเนินการค่าปรับด้วยวิธีใส่บิลเท่านั้น</li>
+                            </ul>
+                        </div>
+
+                        <!-- การปฏิบัติหน้าที่ -->
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                                    <i class="fas fa-balance-scale text-indigo-400"></i>
+                                </div>
+                                <h3 class="text-white font-semibold">การปฏิบัติหน้าที่</h3>
+                            </div>
+                            <ul class="text-slate-400 text-sm space-y-2">
+                                <li>• ไม่ยุ่งเกี่ยวกับผลประโยชน์ของแก๊ง ครอบครัว หรือเอื้ออำนวยฝ่ายใด</li>
+                                <li>• ห้ามทำพฤติกรรมไม่เหมาะสม เช่น กลั่นแกล้งประชาชน</li>
+                                <li>• ต้องรักษาหน้าที่เป็นอันดับแรก ปฏิบัติตามผู้บัญชาการ</li>
+                            </ul>
+                        </div>
+
+                        <!-- การใช้รถหน่วยงาน -->
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                                    <i class="fas fa-car text-amber-400"></i>
+                                </div>
+                                <h3 class="text-white font-semibold">การใช้รถหน่วยงาน</h3>
+                            </div>
+                            <ul class="text-slate-400 text-sm space-y-2">
+                                <li>• ห้ามนำรถหน่วยงานทำงานอื่น (ยกเว้นได้รับอนุญาต)</li>
+                                <li>• ต้องรักษารถประจำตำแหน่ง หากทำหลุดจะโดนลงโทษ</li>
+                                <li>• รถตำรวจนั่งได้สูงสุด 2 คนต่อ 1 คัน</li>
+                            </ul>
+                        </div>
+
+                        <!-- เวลาและการลา -->
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                                    <i class="fas fa-clock text-green-400"></i>
+                                </div>
+                                <h3 class="text-white font-semibold">เวลาและการลา</h3>
+                            </div>
+                            <ul class="text-slate-400 text-sm space-y-2">
+                                <li>• ต้องปฏิบัติหน้าที่ให้ครบ 30 วัน (ไม่ครบจะโดนรีตัว)</li>
+                                <li>• สัญญาฉบับที่ 2+ ต้องทำงานครบ 30 วัน หรือเสียค่าฉีกสัญญา 1M</li>
+                                <li>• คูลดาวน์ออกหน่วยงานเข้าแก๊ง 7 วัน เข้าหน่วยงานรอ 3 วัน</li>
+                                <li>• ขาดงานไม่แจ้งลาติดต่อกัน 3 วัน ปลดทันที + รีตัว</li>
+                            </ul>
+                        </div>
+
+                        <!-- การบันทึกหลักฐาน -->
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
+                                    <i class="fas fa-video text-red-400"></i>
+                                </div>
+                                <h3 class="text-white font-semibold">การบันทึกหลักฐาน</h3>
+                            </div>
+                            <ul class="text-slate-400 text-sm space-y-2">
+                                <li>• แนะนำให้อัด GoPro เป็นหลักฐานเมื่อเกิดปัญหา</li>
+                                <li>• ต้องลงเวลาเข้าเวร/ออกเวรทุกครั้ง (ไม่ลงไม่นับว่าเข้าทำงาน)</li>
+                                <li>• การลงโทษทางวินัยจะถูกแจ้งให้ประชาชนรับทราบ</li>
+                            </ul>
+                        </div>
+
+                        <!-- ข้อห้าม -->
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                                    <i class="fas fa-exclamation-triangle text-purple-400"></i>
+                                </div>
+                                <h3 class="text-white font-semibold">ข้อห้าม</h3>
+                            </div>
+                            <ul class="text-slate-400 text-sm space-y-2">
+                                <li>• ห้ามเข้าโซน AFK ขณะเข้าเวร</li>
+                                <li>• ห้ามร่วมกิจกรรมประเทศขณะเข้าเวร (เว้นแต่ได้รับอนุญาต)</li>
+                                <li>• ของกลางจะเข้าคลังตำรวจ ไม่มอบให้เจ้าหน้าที่</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weapons Section -->
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-crosshairs"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">การใช้งานอาวุธ</div>
+                            <div class="card-subtitle">ระเบียบการใช้อาวุธของเจ้าหน้าที่</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                            <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-sky-500/20 flex items-center justify-center">
+                                <i class="fas fa-bolt text-sky-400 text-2xl"></i>
+                            </div>
+                            <h3 class="text-white font-semibold mb-2">อาวุธพื้นฐาน</h3>
+                            <p class="text-slate-400 text-sm">เทเซอร์, ลูกซอง, ไม้กระบอง</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                            <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-amber-500/20 flex items-center justify-center">
+                                <i class="fas fa-running text-amber-400 text-2xl"></i>
+                            </div>
+                            <h3 class="text-white font-semibold mb-2">กรณีไล่ล่างานดำ</h3>
+                            <p class="text-slate-400 text-sm">ใช้เทเซอร์เท่านั้น</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                            <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-red-500/20 flex items-center justify-center">
+                                <i class="fas fa-bullseye text-red-400 text-2xl"></i>
+                            </div>
+                            <h3 class="text-white font-semibold mb-2">กรณีคดีแดง</h3>
+                            <p class="text-slate-400 text-sm">ใช้ลูกซองยางและอาวุธส่วนตัวได้</p>
+                        </div>
+                    </div>
+
+                    <!-- การแจ้งความ -->
+                    <div class="mt-6 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                        <h3 class="text-white font-semibold mb-3 flex items-center gap-2">
+                            <i class="fas fa-file-alt text-sky-400"></i>
+                            การแจ้งความ
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="flex items-center gap-3 bg-slate-700/50 rounded-lg p-3">
+                                <i class="fas fa-camera text-sky-400"></i>
+                                <p class="text-slate-300 text-sm">การแจ้งความรูปหลักฐานต้องใช้ F12 เท่านั้น (ก่อนสลบเท่านั้น)</p>
+                            </div>
+                            <div class="flex items-center gap-3 bg-slate-700/50 rounded-lg p-3">
+                                <i class="fas fa-phone text-sky-400"></i>
+                                <p class="text-slate-300 text-sm">ติดต่อตำรวจที่หน้า สน. ส่งหลักฐานทางแชท Police หรือโทรศัพท์</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chase Rules -->
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-car-crash"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">กฎการไล่ล่า</div>
+                            <div class="card-subtitle">ระเบียบการไล่ล่าผู้ต้องหา</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <h4 class="text-white font-medium mb-2 flex items-center gap-2">
+                                <i class="fas fa-car text-sky-400"></i>
+                                การไล่ล่ารถ
+                            </h4>
+                            <p class="text-slate-400 text-sm">ไล่ได้ไม่เกิน 3 คัน ต่อ 1 คันรถผู้ต้องหา</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <h4 class="text-white font-medium mb-2 flex items-center gap-2">
+                                <i class="fas fa-exclamation-triangle text-amber-400"></i>
+                                Over Control
+                            </h4>
+                            <p class="text-slate-400 text-sm">ล้อลอย, รถเสียหลัก, เบรคกระชั้นชิด</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <h4 class="text-white font-medium mb-2 flex items-center gap-2">
+                                <i class="fas fa-play text-green-400"></i>
+                                เริ่มการจับกุม
+                            </h4>
+                            <p class="text-slate-400 text-sm">นับจากล้อหมุนออกตัวภายใน 10 วินาที</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <h4 class="text-white font-medium mb-2 flex items-center gap-2">
+                                <i class="fas fa-clock text-red-400"></i>
+                                Waiting 10 วิ
+                            </h4>
+                            <p class="text-slate-400 text-sm">ขึ้นรถแล้วไม่ออกตัว ยิงยางได้ 1 ล้อ</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Take 2 Rules -->
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-wrench"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">กฎ Take 2 / ซ่อมรถ</div>
+                            <div class="card-subtitle">ระเบียบการขอซ่อมรถระหว่างไล่ล่า</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-wrench text-sky-400"></i>
+                                <h4 class="text-white font-medium">ขอซ่อมรถ</h4>
+                            </div>
+                            <p class="text-slate-400 text-sm">จอดรถสนิท + เปิดไมค์สื่อสารกับเจ้าหน้าที่</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-hourglass-half text-amber-400"></i>
+                                <h4 class="text-white font-medium">นับ 5 วินาที</h4>
+                            </div>
+                            <p class="text-slate-400 text-sm">ถ้าตำรวจไม่อนุญาต นับ 5 วิไล่ต่อ</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                                <h4 class="text-white font-medium">ซ่อมเสร็จ</h4>
+                            </div>
+                            <p class="text-slate-400 text-sm">ให้ตำรวจตรวจล้อ + ขึ้นรถก่อน นับ 5 วิไล่ต่อ</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-times-circle text-red-400"></i>
+                                <h4 class="text-white font-medium">หลบหนีระหว่างเจรจา</h4>
+                            </div>
+                            <p class="text-slate-400 text-sm">บั้มได้ทันที</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Curfew Rules -->
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">กฎวงเคอร์ฟิว</div>
+                            <div class="card-subtitle">ระเบียบการเปิดวงเคอร์ฟิว</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                            <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-sky-500/20 flex items-center justify-center">
+                                <i class="fas fa-bullhorn text-sky-400 text-2xl"></i>
+                            </div>
+                            <h4 class="text-white font-semibold mb-2">เปิดวงเคอร์ฟิว</h4>
+                            <p class="text-slate-400 text-sm">เมื่อเห็นว่าเป็นเหตุอันตราย</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                            <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-amber-500/20 flex items-center justify-center">
+                                <i class="fas fa-comments text-amber-400 text-2xl"></i>
+                            </div>
+                            <h4 class="text-white font-semibold mb-2">เตือนก่อน</h4>
+                            <p class="text-slate-400 text-sm">เตือนเพื่อหยุดการทะเลาะวิวาท</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                            <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-green-500/20 flex items-center justify-center">
+                                <i class="fas fa-clock text-green-400 text-2xl"></i>
+                            </div>
+                            <h4 class="text-white font-semibold mb-2">10 วินาที</h4>
+                            <p class="text-slate-400 text-sm">ไม่ออกจากพื้นที่ จับได้ทันที</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                            <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-red-500/20 flex items-center justify-center">
+                                <i class="fas fa-gavel text-red-400 text-2xl"></i>
+                            </div>
+                            <h4 class="text-white font-semibold mb-2">ฝ่าฝืน</h4>
+                            <p class="text-slate-400 text-sm">30,000 ฿ / 60 นาที</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wanted Rules -->
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-user-slash"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">ประกาศหมายเรียก / หมายจับ</div>
+                            <div class="card-subtitle">ระเบียบการประกาศจับ</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="text-4xl font-bold text-sky-400 mb-2">3 ครั้ง</div>
+                            <h4 class="text-white font-semibold mb-2">ประกาศหมายเรียก</h4>
+                            <p class="text-slate-400 text-sm">ประกาศ 3 ครั้ง ห่างกัน 10 นาที (IC และ OC)</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="text-4xl font-bold text-amber-400 mb-2">24h</div>
+                            <h4 class="text-white font-semibold mb-2">หมายจับ</h4>
+                            <p class="text-slate-400 text-sm">ไม่รายงานตัวติดต่อกัน 24 ชม. = หมายจับ</p>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <div class="text-4xl font-bold text-red-400 mb-2">1h</div>
+                            <h4 class="text-white font-semibold mb-2">รายงานตัว</h4>
+                            <p class="text-slate-400 text-sm">รายงานตัวทุก 1 ชั่วโมงผ่านแชท</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rebel Area Rules -->
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">พื้นที่เรเบล</div>
+                            <div class="card-subtitle">ระเบียบการปฏิบัติในพื้นที่ไร้กฏหมาย</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <h4 class="text-white font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-skull text-red-400"></i>
+                                ในพื้นที่เรเบล
+                            </h4>
+                            <ul class="text-slate-400 text-sm space-y-2">
+                                <li>• ไม่สามารถรับแจ้งความได้</li>
+                                <li>• สตอรี่งานดำหนีเข้าเรเบล: ตำรวจ 15 คน + หมอ 10 คน</li>
+                                <li>• ไม่เก็บอาวุธ + ก่อเหตุ = จับกุมได้ทันที</li>
+                                <li>• แก๊งชนะ = คืนศพให้แพทย์เท่านั้น</li>
+                                <li>• หน่วยงานชนะ = ให้แพทย์ชุบฝ่ายแพ้ก่อน</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <h4 class="text-white font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-city text-sky-400"></i>
+                                นอกพื้นที่เรเบล
+                            </h4>
+                            <ul class="text-slate-400 text-sm space-y-2">
+                                <li>• ทำร้ายเจ้าหน้าที่: ตำรวจ 15 คน + หมอ 10 คน</li>
+                                <li>• ไม่เก็บอาวุธ + ก่อเหตุ = จับกุมทันที</li>
+                                <li>• แก๊งชนะ = คืนศพให้แพทย์</li>
+                                <li>• หน่วยงานชนะ = นำตัวไป สน.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fines Table Section -->
+            <div id="fines-table" class="mb-8" x-show="currentSection === 'fines-table'" x-cloak>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-table"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">ตารางค่าปรับ</div>
+                            <div class="card-subtitle">อัตราค่าปรับและเวลาจำคุก</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- Illegal Items Table -->
+                        <div>
+                            <h3 class="text-white font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-box text-sky-400"></i>
+                                ของผิดกฎหมาย
+                            </h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr><th>รายการ</th><th>ค่าปรับ</th><th>จำคุก</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>ปูน</td><td class="text-amber-400">2,000 ฿</td><td>10</td></tr>
+                                        <tr><td>แคปซูล (Capsule A, B)</td><td class="text-amber-400">3,000 ฿</td><td>10</td></tr>
+                                        <tr><td>แคปซูล (Ghost Capsule)</td><td class="text-amber-400">5,000 ฿</td><td>10</td></tr>
+                                        <tr><td>เงินผิดกฎหมาย (เงินแดง)</td><td class="text-amber-400">X5</td><td>15</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-slate-400 text-sm mt-2">• คดีทั่วไป และ ของผิดกฎหมาย สามารถประกันเวลาได้ 1 นาที = 300 ฿ ขั้นต่ำติดคุก 5 นาที</p>
+                        </div>
+
+                        <!-- General Cases Table -->
+                        <div>
+                            <h3 class="text-white font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-gavel text-indigo-400"></i>
+                                คดีทั่วไป
+                            </h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr><th>รายการ</th><th>ค่าปรับ</th><th>จำคุก</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>พื้นที่สุ่มเสี่ยง</td><td class="text-amber-400">2,000 ฿</td><td>10</td></tr>
+                                        <tr><td>หลบหนี</td><td class="text-amber-400">2,000 ฿</td><td>10</td></tr>
+                                        <tr><td>ใส่หน้ากากปิดบังหน้าตา</td><td class="text-amber-400">5,000 ฿</td><td>-</td></tr>
+                                        <tr><td>ทะเลาะวิวาท</td><td class="text-amber-400">20,000 ฿</td><td>15</td></tr>
+                                        <tr><td>หลบหนีขึ้นเขาและลงน้ำ</td><td class="text-amber-400">X3</td><td>10</td></tr>
+                                        <tr><td>หลบหนีออกนอกเมือง</td><td class="text-amber-400">5,000 ฿</td><td>10</td></tr>
+                                        <tr><td>หลบหนีหลังจากจับกุม</td><td class="text-amber-400">X2</td><td>X2</td></tr>
+                                        <tr><td>ทำลายหลักฐาน</td><td class="text-amber-400">10,000 ฿</td><td>20</td></tr>
+                                        <tr><td>ถืออาวุธในพื้นที่สาธารณะ</td><td class="text-amber-400">5,000 ฿</td><td>10</td></tr>
+                                        <tr><td>ไม่ให้ความร่วมมือแก่เจ้าหน้าที่</td><td class="text-amber-400">5,000 ฿</td><td>10</td></tr>
+                                        <tr><td>แจ้งความเท็จ</td><td class="text-amber-400">5,000 ฿</td><td>20</td></tr>
+                                        <tr><td>กระทำความผิดซึ่งหน้า</td><td class="text-amber-400">5,000 ฿</td><td>15</td></tr>
+                                        <tr><td>ส่งของผิดกฏหมาย</td><td class="text-amber-400">5,000 ฿</td><td>20</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Red Cases Table -->
+                        <div>
+                            <h3 class="text-white font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-exclamation-triangle text-red-400"></i>
+                                คดีแดง (ประกันไม่ได้)
+                            </h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr><th>รายการ</th><th>ค่าปรับ</th><th>จำคุก</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>ช่วยเหลือ/ขัดขวางการทำงานเจ้าหน้าที่</td><td class="text-red-400">20,000 ฿</td><td>30</td></tr>
+                                        <tr><td>หมิ่นประมาทเจ้าหน้าที่</td><td class="text-red-400">50,000 ฿</td><td>30</td></tr>
+                                        <tr><td>บุกรุกเรือนจำ</td><td class="text-red-400">30,000 ฿</td><td>60</td></tr>
+                                        <tr><td>แหกคุก</td><td class="text-red-400">30,000 ฿</td><td>60</td></tr>
+                                        <tr><td>ทำร้ายร่างกายประชาชน</td><td class="text-red-400">25,000 ฿</td><td>30</td></tr>
+                                        <tr><td>ทำร้ายร่างกายหน่วยงาน</td><td class="text-red-400">50,000 ฿</td><td>60</td></tr>
+                                        <tr><td>ก่อกวน/สร้างความวุ่นวาย</td><td class="text-red-400">10,000 ฿</td><td>30</td></tr>
+                                        <tr><td>ข่มขู่/กักขังหน่วงเหนี่ยว</td><td class="text-red-400">20,000 ฿</td><td>30</td></tr>
+                                        <tr><td>แอบอ้างเป็นหน่วยงาน</td><td class="text-red-400">50,000 ฿</td><td>60</td></tr>
+                                        <tr><td>ขโมยพาหนะประชาชน</td><td class="text-red-400">30,000 ฿</td><td>30</td></tr>
+                                        <tr><td>ขโมยพาหนะตำรวจ</td><td class="text-red-400">50,000 ฿</td><td>30</td></tr>
+                                        <tr><td>ฉ้อโกง</td><td class="text-red-400">30,000 ฿</td><td>30</td></tr>
+                                        <tr><td>หลีกเลี่ยงประกาศหมายเรียก</td><td class="text-red-400">20,000 ฿</td><td>30</td></tr>
+                                        <tr><td>ทำลายทรัพย์สินของหน่วยงาน</td><td class="text-red-400">20,000 ฿</td><td>30</td></tr>
+                                        <tr><td>ฝ่าฝืนวงเคอร์ฟิว</td><td class="text-red-400">30,000 ฿</td><td>60</td></tr>
+                                        <tr><td>ก่อเหตุบริเวณ สน./รพ.</td><td class="text-red-400">100,000 ฿</td><td>60</td></tr>
+                                        <tr><td>หลบหนีเข้าเรเบล</td><td class="text-red-400">50,000 ฿</td><td>60</td></tr>
+                                        <tr><td>FULLSYSTEM (3 คดีขึ้นไป)</td><td class="text-red-400">200,000 ฿</td><td>100</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-red-400 text-sm mt-2">⚠️ คดีมาตราการพิเศษ (คดีแดง) ไม่สามารถประกัน หากมีสิ่งของผิดกฎหมายสามารถประกันได้แค่คดีทั่วไปกับสิ่งของผิดกฎหมาย</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Arrest Section -->
+            <div id="arrest" class="mb-8" x-show="currentSection === 'arrest'" x-cloak>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-handcuffs"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">รูปแบบการปฏิบัติการจับกุม</div>
+                            <div class="card-subtitle">ขั้นตอนและกฎการจับกุมผู้ต้องหา</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timeline -->
+                    <div class="space-y-4 mb-8">
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold flex-shrink-0">1</div>
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex-1">
+                                <h3 class="text-white font-semibold mb-2">เปิดไซเรน</h3>
+                                <p class="text-slate-400 text-sm">เปิดไซเรนตั้งแต่กดรับเคส (ตั้งแต่ 0.2-0.5 ml)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold flex-shrink-0">2</div>
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex-1">
+                                <h3 class="text-white font-semibold mb-2">กระทำผิดซึ่งหน้า</h3>
+                                <p class="text-slate-400 text-sm">การจกปูน, ขายยา, จกสายไฟ, รวมถึงการทำทุกชนิด กระทำผิดซึ่งหน้าสามารถจับกุมได้ทันทีไม่มีข้อยกเว้น</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold flex-shrink-0">3</div>
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex-1">
+                                <h3 class="text-white font-semibold mb-2">ขึ้นรถภายใน 10 วินาที</h3>
+                                <p class="text-slate-400 text-sm">ผู้ต้องหาต้องขึ้นรถทันที หากไม่ขึ้นรถภายใน 10 วินาทีเจ้าหน้าที่สามารถจับกุมได้</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold flex-shrink-0">4</div>
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex-1">
+                                <h3 class="text-white font-semibold mb-2">ยิงยาง</h3>
+                                <p class="text-slate-400 text-sm">ห่างไกลจากรถเกิน 3 ช่วงคันรถ ยิงยางได้เลย 1 ยาง</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold flex-shrink-0">5</div>
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex-1">
+                                <h3 class="text-white font-semibold mb-2">ยิงยางครบ 4 ล้อ</h3>
+                                <p class="text-slate-400 text-sm">ต้องยิงยางให้ครบ 4 ล้อก่อนถึงจะดำเนินการจับกุมขั้นต่อไปได้</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold flex-shrink-0">6</div>
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex-1">
+                                <h3 class="text-white font-semibold mb-2">มอบตัว</h3>
+                                <p class="text-slate-400 text-sm">ยิงยางครบ 4 ล้อแล้ว ต้องมอบตัวทันที หากไม่มอบตัว ยิงตัวได้เลย</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chase Rules -->
+                    <div class="mb-8">
+                        <h3 class="text-white font-semibold mb-4 flex items-center gap-2 text-lg">
+                            <i class="fas fa-car-crash text-red-400"></i>
+                            กฎการไล่ล่า
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                                <h4 class="text-white font-medium mb-2 flex items-center gap-2">
+                                    <i class="fas fa-car text-sky-400"></i>
+                                    การไล่ล่ารถ
+                                </h4>
+                                <p class="text-slate-400 text-sm">ไล่ได้ไม่เกิน 3 คัน ต่อ 1 คันรถผู้ต้องหา</p>
+                            </div>
+
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                                <h4 class="text-white font-medium mb-2 flex items-center gap-2">
+                                    <i class="fas fa-exclamation-triangle text-amber-400"></i>
+                                    Over Control
+                                </h4>
+                                <p class="text-slate-400 text-sm">ล้อลอยจากพื้น, รถเสียหลัก, รถอยู่เหนือการควบคุม, เบรคกระชั้นชิด</p>
+                            </div>
+
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                                <h4 class="text-white font-medium mb-2 flex items-center gap-2">
+                                    <i class="fas fa-play text-green-400"></i>
+                                    เริ่มการจับกุม
+                                </h4>
+                                <p class="text-slate-400 text-sm">นับจากล้อหมุนออกตัวภายใน 10 วินาที</p>
+                            </div>
+
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                                <h4 class="text-white font-medium mb-2 flex items-center gap-2">
+                                    <i class="fas fa-clock text-red-400"></i>
+                                    Waiting 10 วินาที
+                                </h4>
+                                <p class="text-slate-400 text-sm">ขึ้นรถแล้วไม่ออกตัว ยิงยางได้ 1 ยาง</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Take 2 Rules -->
+                    <div class="mb-8">
+                        <h3 class="text-white font-semibold mb-4 flex items-center gap-2 text-lg">
+                            <i class="fas fa-wrench text-amber-400"></i>
+                            กฎ Take 2 / ซ่อมรถ
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fas fa-wrench text-sky-400"></i>
+                                    <h4 class="text-white font-medium">ขอซ่อมรถ</h4>
+                                </div>
+                                <p class="text-slate-400 text-sm">จอดรถสนิท + เปิดไมค์ตะโกนสื่อสารกับเจ้าหน้าที่</p>
+                            </div>
+
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fas fa-hourglass-half text-amber-400"></i>
+                                    <h4 class="text-white font-medium">นับ 5 วินาที</h4>
+                                </div>
+                                <p class="text-slate-400 text-sm">ถ้าตำรวจไม่อนุญาต จะเริ่มนับ 5 วิเพื่อไล่ล่าต่อ</p>
+                            </div>
+
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fas fa-check-circle text-green-400"></i>
+                                    <h4 class="text-white font-medium">ซ่อมเสร็จ</h4>
+                                </div>
+                                <p class="text-slate-400 text-sm">ให้ตำรวจตรวจล้อ + ขึ้นรถก่อน แล้วผู้ต้องหาขึ้นรถ นับ 5 วิไล่ต่อ</p>
+                            </div>
+
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fas fa-exclamation-circle text-red-400"></i>
+                                    <h4 class="text-white font-medium">หลบหนีระหว่างเจรจา</h4>
+                                </div>
+                                <p class="text-slate-400 text-sm">ตำรวจจับกุมแบบเพิ่มระดับได้ทันที</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search & Seize -->
+                    <div class="mb-8">
+                        <h3 class="text-white font-semibold mb-4 flex items-center gap-2 text-lg">
+                            <i class="fas fa-search text-indigo-400"></i>
+                            การตรวจค้นรถ / ยึดรถ / พาวรถ
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                                <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-sky-500/20 flex items-center justify-center">
+                                    <i class="fas fa-car-side text-sky-400 text-2xl"></i>
+                                </div>
+                                <h4 class="text-white font-semibold mb-2">พาวรถ</h4>
+                                <p class="text-slate-400 text-sm">หลังจับกุมสำเร็จ จะต้องพาวรถทุกครั้ง</p>
+                            </div>
+
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                                <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-amber-500/20 flex items-center justify-center">
+                                    <i class="fas fa-search-location text-amber-400 text-2xl"></i>
+                                </div>
+                                <h4 class="text-white font-semibold mb-2">พื้นที่สุ่มเสี่ยง</h4>
+                                <p class="text-slate-400 text-sm">พาวรถได้หากไม่มีเจ้าของรถ</p>
+                            </div>
+
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                                <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-green-500/20 flex items-center justify-center">
+                                    <i class="fas fa-box-open text-green-400 text-2xl"></i>
+                                </div>
+                                <h4 class="text-white font-semibold mb-2">ตรวจค้นรถ</h4>
+                                <p class="text-slate-400 text-sm">พบของผิดกฎหมาย ทั้งคนขับและคนนั่งโดนค่าปรับ</p>
+                            </div>
+
+                            <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                                <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-red-500/20 flex items-center justify-center">
+                                    <i class="fas fa-lock text-red-400 text-2xl"></i>
+                                </div>
+                                <h4 class="text-white font-semibold mb-2">ยึดรถ</h4>
+                                <p class="text-slate-400 text-sm">กรณีปล้นรถ, ผิดกฏประเทศ BK</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Calculator -->
+            <div id="calculator" class="calculator-layout" x-show="currentSection === 'calculator'" x-cloak>
+                <!-- Charges Panel -->
+                <div class="charges-section">
+                    <!-- Money Red Input -->
+                    <div class="money-input-wrapper">
+                        <label class="block text-slate-300 mb-2 font-medium">
+                            <i class="fas fa-money-bill-wave text-amber-400 mr-2"></i>
+                            เงินแดง (ค่าปรับ X5)
+                        </label>
+                        <input 
+                            type="number" 
+                            class="money-input"
+                            placeholder="ระบุจำนวนเงินแดง..."
+                            x-model="moneyRedAmount"
+                            @input="calculateTotal()"
+                        >
+                    </div>
+                    
+                    <!-- Category 1: Illegal Items -->
+                    <div class="category-section">
+                        <div class="category-header">
+                            <i class="fas fa-box text-2xl text-sky-400"></i>
+                            <div class="category-title">
+                                <span>ของผิดกฎหมาย</span>
+                            </div>
+                        </div>
+                        
+                        <div class="charges-grid">
+                            <template x-for="charge in finesData.illegal_items" :key="charge.name">
+                                <div 
+                                    class="charge-item"
+                                    :class="{ 'selected': isChargeSelected(charge) }"
+                                    @click="toggleCharge(charge, 'illegal_items')"
+                                >
+                                    <div class="charge-checkbox">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="charge-info">
+                                        <div class="charge-name">
+                                            <span x-text="charge.name"></span>
+                                        </div>
+                                        <div class="charge-details">
+                                            <span class="charge-fine" x-show="!charge.multiplier || charge.multiplier === 'money'">
+                                                <i class="fas fa-coins mr-1"></i>
+                                                <span x-text="formatNumber(charge.fine)"></span>
+                                            </span>
+                                            <span class="charge-jail" x-show="charge.jail > 0">
+                                                <i class="fas fa-clock mr-1"></i>
+                                                <span x-text="charge.jail + ' นาที'"></span>
+                                            </span>
+                                            <span class="charge-fine" x-show="charge.multiplier === 'money'">
+                                                <i class="fas fa-times mr-1"></i>5
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="quantity-wrapper" x-show="isChargeSelected(charge) && !charge.multiplier">
+                                        <input 
+                                            type="number" 
+                                            class="quantity-input"
+                                            min="1"
+                                            :value="selectedCharges.find(c => c.name === charge.name)?.quantity || 1"
+                                            @click.stop
+                                            @input="updateQuantity(charge.name, $event.target.value)"
+                                        >
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Category 2: General Cases -->
+                    <div class="category-section">
+                        <div class="category-header">
+                            <i class="fas fa-gavel text-2xl text-indigo-400"></i>
+                            <div class="category-title">
+                                <span>คดีทั่วไป</span>
+                            </div>
+                        </div>
+                        
+                        <div class="charges-grid">
+                            <template x-for="charge in finesData.general" :key="charge.name">
+                                <div 
+                                    class="charge-item"
+                                    :class="{ 'selected': isChargeSelected(charge) }"
+                                    @click="toggleCharge(charge, 'general')"
+                                >
+                                    <div class="charge-checkbox">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="charge-info">
+                                        <div class="charge-name">
+                                            <span x-text="charge.name"></span>
+                                        </div>
+                                        <div class="charge-details">
+                                            <span class="charge-fine" x-show="!charge.multiplier">
+                                                <i class="fas fa-coins mr-1"></i>
+                                                <span x-text="formatNumber(charge.fine)"></span>
+                                            </span>
+                                            <span class="charge-jail" x-show="charge.jail > 0">
+                                                <i class="fas fa-clock mr-1"></i>
+                                                <span x-text="charge.jail + ' นาที'"></span>
+                                            </span>
+                                            <span class="charge-fine" x-show="charge.multiplier === 'x2'">
+                                                <i class="fas fa-times mr-1"></i>2
+                                            </span>
+                                            <span class="charge-fine" x-show="charge.multiplier === 'x3'">
+                                                <i class="fas fa-times mr-1"></i>3
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Category 3: Red Cases -->
+                    <div class="category-section">
+                        <div class="category-header red">
+                            <i class="fas fa-exclamation-triangle text-2xl text-red-400"></i>
+                            <div class="category-title">
+                                <span>คดีแดง</span>
+                                <span class="red-badge ml-2">ประกันไม่ได้</span>
+                            </div>
+                        </div>
+                        
+                        <div class="charges-grid">
+                            <template x-for="charge in finesData.red_cases" :key="charge.name">
+                                <div 
+                                    class="charge-item"
+                                    :class="{ 'selected': isChargeSelected(charge) }"
+                                    @click="toggleCharge(charge, 'red_cases')"
+                                >
+                                    <div class="charge-checkbox">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="charge-info">
+                                        <div class="charge-name">
+                                            <span x-text="charge.name"></span>
+                                            <span class="red-badge ml-2">คดีแดง</span>
+                                        </div>
+                                        <div class="charge-details">
+                                            <span class="charge-fine">
+                                                <i class="fas fa-coins mr-1"></i>
+                                                <span x-text="formatNumber(charge.fine)"></span>
+                                            </span>
+                                            <span class="charge-jail" x-show="charge.jail > 0">
+                                                <i class="fas fa-clock mr-1"></i>
+                                                <span x-text="charge.jail + ' นาที'"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Result Panel -->
+                <div class="result-panel">
+                    <div class="flex items-center gap-2 mb-4 pb-4 border-b border-sky-500/20">
+                        <i class="fas fa-chart-pie text-sky-400 text-xl"></i>
+                        <h2 class="text-xl font-bold text-white">ผลลัพธ์</h2>
+                    </div>
+                    
+                    <!-- Main Result -->
+                    <div class="result-main">
+                        <div class="text-slate-400 mb-2 text-sm">ค่าปรับรวม</div>
+                        <div class="result-main-value">
+                            <span x-text="formatNumber(results.totalFine)"></span> ฿
+                        </div>
+                        <div class="text-slate-400 mt-2 flex items-center justify-center gap-2">
+                            <i class="fas fa-clock"></i>
+                            <span x-text="results.totalJail + ' นาที'"></span>
+                        </div>
+                    </div>
+
+                    <!-- Red Case Guide -->
+                    <div class="mb-4 p-4 bg-red-900/20 border border-red-500/30 rounded-xl" x-show="results.hasRedCase">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="fas fa-exclamation-triangle text-red-400 text-lg"></i>
+                            <h4 class="text-white font-semibold">🔴 คดีแดง - ขั้นตอนการจับกุม</h4>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="bg-slate-800/50 rounded-lg p-3 border border-red-500/20">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 text-xs font-bold">1</div>
+                                    <span class="text-white font-medium text-sm">ใส่ชื่อทุกคนที่เข้าเวรในดิสคอร์ด</span>
+                                </div>
+                                <p class="text-slate-400 text-xs ml-8">ไปที่ห้อง ⁠🗂・ใช้คำสั่ง แล้วใส่ <code class="bg-slate-700 px-2 py-1 rounded text-red-300">export_name_inwork</code></p>
+                            </div>
+                            
+                            <div class="bg-slate-800/50 rounded-lg p-3 border border-red-500/20">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 text-xs font-bold">2</div>
+                                    <span class="text-white font-medium text-sm">ก๊อปปี้รายชื่อทั้งหมด</span>
+                                </div>
+                                <p class="text-slate-400 text-xs ml-8">นำรายชื่อที่ขึ้นทั้งหมดมาใส่ตรงช่อง <code class="bg-slate-700 px-2 py-1 rounded text-red-300">🆘 ช่วยเหลือ : @</code></p>
+                            </div>
+                            
+                            <div class="bg-slate-800/50 rounded-lg p-3 border border-red-500/20">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 text-xs font-bold">3</div>
+                                    <span class="text-white font-medium text-sm">คัดลอกผลลัพธ์</span>
+                                </div>
+                                <p class="text-slate-400 text-xs ml-8">กดปุ่มคัดลอกแล้วนำไปใช้ในช่องช่วยเหลือ</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3 text-center">
+                            <img src="https://media.discordapp.net/attachments/1484824038055608342/1486985711273115658/image.png?ex=69ca21dc&is=69c8d05c&hm=c597f931bc1b17bbcfbf802ffa045d1e13577d66d9789a0e77b3fc6622d07c5b&=&format=webp&quality=lossless" 
+                                 alt="ตัวอย่างการ export ชื่อ" 
+                                 class="rounded-lg border border-red-500/30 max-w-full"
+                                 style="max-height: 200px; object-fit: contain;">
+                        </div>
+                    </div>
+                    
+                    <!-- Summary -->
+                    <div class="mb-4 p-3 bg-slate-800/50 rounded-lg">
+                        <div class="text-slate-400 text-sm mb-2">สรุปข้อหา</div>
+                        <div class="flex flex-wrap gap-1">
+                            <template x-if="selectedCharges.length === 0 && !moneyRedAmount">
+                                <span class="text-slate-500 text-xs">ยังไม่ได้เลือกข้อหา</span>
+                            </template>
+                            <template x-for="charge in selectedCharges" :key="charge.name">
+                                <span class="bg-sky-900/30 text-sky-300 text-xs px-2 py-1 rounded">
+                                    <span x-text="charge.name"></span>
+                                    <span x-show="charge.quantity > 1" x-text="' x' + charge.quantity"></span>
+                                </span>
+                            </template>
+                            <template x-if="moneyRedAmount">
+                                <span class="bg-amber-900/30 text-amber-300 text-xs px-2 py-1 rounded">
+                                    เงินแดง <span x-text="formatNumber(moneyRedAmount)"></span>
+                                </span>
+                            </template>
+                            <template x-if="useBail && selectedCharges.length > 0 || useBail && moneyRedAmount">
+                                <span class="bg-green-900/30 text-green-300 text-xs px-2 py-1 rounded">
+                                    <i class="fas fa-check-circle mr-1"></i>
+                                    <span>ประกัน</span>
+                                </span>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Bail Selection -->
+                    <div class="mb-4" x-show="selectedCharges.length > 0 || moneyRedAmount">
+                        <h4 class="text-slate-300 font-medium mb-3 flex items-center gap-2">
+                            <i class="fas fa-balance-scale text-sky-400"></i>
+                            <span>ตัวเลือกประกัน</span>
+                        </h4>
+                        
+                        <!-- ปุ่มประกัน - แสดงเฉพาะเมื่อไม่มีคดีแดง -->
+                        <div class="grid grid-cols-2 gap-3" x-show="!results.hasRedCase">
+                            <!-- No Bail Button -->
+                            <button 
+                                @click="useBail = false"
+                                class="p-4 rounded-xl border-2 transition-all"
+                                :class="!useBail ? 'border-slate-500 bg-slate-700/50' : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'"
+                            >
+                                <div class="flex items-center justify-center gap-2 mb-2">
+                                    <i class="fas fa-lock text-slate-400"></i>
+                                    <span class="text-white font-medium">ไม่ประกัน</span>
+                                </div>
+                                <div class="text-xs text-slate-400">
+                                    <div>ติดคุก: <span class="text-white font-medium" x-text="formatNumber(results.bailOptions.noBail.time) + ' นาที'"></span></div>
+                                    <div>รวม: <span class="text-white font-medium" x-text="formatNumber(results.bailOptions.noBail.fine) + ' ฿'"></span></div>
+                                </div>
+                            </button>
+                            
+                            <!-- Bail Button -->
+                            <button
+                                @click="useBail = true"
+                                class="p-4 rounded-xl border-2 transition-all"
+                                :class="useBail ? 'border-green-500 bg-green-900/20' : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'"
+                            >
+                                <div class="flex items-center justify-center gap-2 mb-2">
+                                    <i class="fas fa-check-circle" :class="useBail ? 'text-green-400' : 'text-slate-400'"></i>
+                                    <span class="text-white font-medium" :class="useBail ? 'text-green-400' : 'text-white'">ประกัน</span>
+                                </div>
+                                <div class="text-xs text-slate-400">
+                                    <div>ติดคุก: <span class="font-medium" x-text="formatNumber(results.bailOptions.bail.time) + ' นาที'"></span></div>
+                                    <div>รวม: <span class="font-medium" x-text="formatNumber(results.bailOptions.bail.fine) + ' ฿'"></span></div>
+                                </div>
+                            </button>
+                        </div>
+                        
+                        <!-- แสดงเฉพาะปุ่มไม่ประกันเมื่อมีคดีแดง -->
+                        <div x-show="results.hasRedCase">
+                            <button 
+                                class="p-4 rounded-xl border-2 border-slate-500 bg-slate-700/50 w-full cursor-not-allowed opacity-75"
+                                disabled
+                            >
+                                <div class="flex items-center justify-center gap-2 mb-2">
+                                    <i class="fas fa-lock text-slate-400"></i>
+                                    <span class="text-white font-medium">ไม่ประกัน</span>
+                                </div>
+                                <div class="text-xs text-slate-400">
+                                    <div>ติดคุก: <span class="text-white font-medium" x-text="formatNumber(results.bailOptions.noBail.time) + ' นาที'"></span></div>
+                                    <div>รวม: <span class="text-white font-medium" x-text="formatNumber(results.bailOptions.noBail.fine) + ' ฿'"></span></div>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Red Case Warning -->
+                        <div class="bail-note bg-red-900/20 border border-red-500/30 rounded-lg mt-3 flex items-center gap-2 p-3" x-show="results.hasRedCase">
+                            <i class="fas fa-exclamation-triangle text-red-400"></i>
+                            <span class="text-red-300 text-sm">ไม่สามารถประกันได้ - มีคดีแดง</span>
+                        </div>
+
+                        <!-- Bail Info -->
+                        <div class="text-xs text-slate-500 mt-2 flex items-center gap-1" x-show="!results.hasRedCase">
+                            <i class="fas fa-info-circle"></i>
+                            <span>อัตราประกัน: 300 ฿/นาที (ขั้นต่ำ 5 นาที)</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Final Result Display -->
+                    <div class="mb-4 p-4 bg-slate-700/30 rounded-xl" x-show="selectedCharges.length > 0 || moneyRedAmount">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-slate-400 text-sm">สถานะ:</span>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium" 
+                                  :class="useBail ? 'bg-green-900/30 text-green-400' : 'bg-slate-600/30 text-slate-400'"
+                                  x-text="useBail ? 'ประกัน' : 'ไม่ประกัน'">
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400 text-sm">จำคุก:</span>
+                            <span class="text-white font-medium" x-text="useBail ? formatNumber(results.bailOptions.bail.time) + ' นาที' : formatNumber(results.bailOptions.noBail.time) + ' นาที'"></span>
+                        </div>
+                        <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-600">
+                            <span class="text-slate-400 text-sm">ค่าปรับรวม:</span>
+                            <span class="text-amber-400 font-bold" x-text="useBail ? formatNumber(results.bailOptions.bail.fine) + ' ฿' : formatNumber(results.bailOptions.noBail.fine) + ' ฿'"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button
+                            class="btn btn-primary flex-1"
+                            @click="copyResult()"
+                            :disabled="selectedCharges.length === 0 && !moneyRedAmount"
+                        >
+                            <i class="fas fa-copy"></i>
+                            <span>คัดลอก</span>
+                        </button>
+                        <button
+                            class="btn btn-secondary"
+                            @click="resetForm()"
+                        >
+                            <i class="fas fa-redo"></i>
+                            <span>ล้าง</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Toast Notifications -->
+    <div class="toast-container">
+        <template x-for="notification in notifications" :key="notification.id">
+            <div 
+                class="toast"
+                :class="notification.type"
+                @click="removeNotification(notification.id)"
+            >
+                <i class="fas toast-icon" 
+                   :class="{
+                       'fa-check-circle': notification.type === 'success',
+                       'fa-exclamation-circle': notification.type === 'error',
+                       'fa-info-circle': notification.type === 'info'
+                   }">
+                </i>
+                <span class="toast-message" x-text="notification.message"></span>
+            </div>
+        </template>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-credit">
+            <p>Shark Police v.0.0.1 | Created by <strong class="text-sky-400">Kaneji Nightfall</strong></p>
+        </div>
+    </footer>
+    
+    <!-- App Script -->
+    <script src="assets/js/app-simple.js"></script>
+    
+    <!-- Visual Effects -->
+    <script src="assets/js/visual-effects.js"></script>
+    
+    <!-- Anti-Copy Protection -->
+    <script src="assets/js/anti-copy.js"></script>
+</body>
+</html>
