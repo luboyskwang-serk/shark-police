@@ -1,10 +1,11 @@
 /**
- * Shark Police v.0.0.1 - Simple Calculator (No Login)
+ * Shark Police v.0.0.2 - Simple Calculator (No Login)
  * Created by Kaneji Nightfall
  */
 
 function calculatorApp() {
     return {
+        mobileMenuOpen: false,
         currentSection: 'calculator',
         selectedCharges: [],
         moneyRedAmount: '',
@@ -13,16 +14,16 @@ function calculatorApp() {
 
         finesData: {
             illegal_items: [
-                { name: 'ปูน', fine: 2000, jail: 10, type: 'normal' },
-                { name: 'แคปซูล (Capsule A)', fine: 3000, jail: 10, type: 'normal' },
-                { name: 'แคปซูล (Capsule B)', fine: 3000, jail: 10, type: 'normal' },
-                { name: 'แคปซูลตัวร้าย', fine: 5000, jail: 10, type: 'normal' },
-                { name: 'เงินผิดกฎหมาย (เงินแดง)', fine: 0, jail: 15, type: 'normal', multiplier: 'money' }
+                { name: 'ปูน', fine: 2000, jail: 10, type: 'normal', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488139333075468388/cement.png?ex=69cbb141&is=69ca5fc1&hm=a8dcdc687cc18cb1fff6f75adfd6bc15dada8d165d3658ebcedb75f0816d48ee&=&format=webp&quality=lossless' },
+                { name: 'แคปซูล (Capsule A)', fine: 3000, jail: 10, type: 'normal', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488139294374760619/capsule_a.png?ex=69cbb138&is=69ca5fb8&hm=bd753327700d7ae56365f98440a46eec244a50557f725de2300801ad4bf40cc4&=&format=webp&quality=lossless' },
+                { name: 'แคปซูล (Capsule B)', fine: 3000, jail: 10, type: 'normal', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488139313098129528/capsule_b.png?ex=69cbb13c&is=69ca5fbc&hm=49498534c2197389baf62354f27f89acd063cf34972eda2f82baa6ea40de34de&=&format=webp&quality=lossless' },
+                { name: 'แคปซูลตัวร้าย', fine: 5000, jail: 10, type: 'normal', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488139473798824097/capsule_nightmare.png?ex=69cbb162&is=69ca5fe2&hm=f42538824cb03fb6a84db61c545535591a957ce83d2023feebab13e025593b8c&=&format=webp&quality=lossless' },
+                { name: 'เงินผิดกฎหมาย (เงินแดง)', fine: 0, jail: 15, type: 'normal', multiplier: 'money', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488139361508917289/black_money.png?ex=69cbb148&is=69ca5fc8&hm=f0d53910964e267bc19e4e92f350e94678c8339c33cf3535f7d8860be8e80026&=&format=webp&quality=lossless' }
             ],
             general: [
                 { name: 'พื้นที่สุ่มเสี่ยง', fine: 2000, jail: 10, type: 'normal' },
                 { name: 'หลบหนี', fine: 2000, jail: 10, type: 'normal' },
-                { name: 'ใส่หน้ากากปิดบังหน้าตา', fine: 5000, jail: 0, type: 'normal' },
+                { name: 'ใส่หน้ากากปิดบังหน้าตา', fine: 5000, jail: 0, type: 'normal', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488142691547090994/player_mask.png?ex=69cbb462&is=69ca62e2&hm=3e934bf4bcece606971097319ee1bfe629ca929362fb8808c67bc63a0e985783&=&format=webp&quality=lossless' },
                 { name: 'ทะเลาะวิวาท', fine: 20000, jail: 15, type: 'normal' },
                 { name: 'หลบหนีขึ้นเขาและลงน้ำ', fine: 0, jail: 10, type: 'normal', multiplier: 'x3' },
                 { name: 'หลบหนีออกนอกเมือง', fine: 5000, jail: 10, type: 'normal' },
