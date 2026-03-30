@@ -1093,15 +1093,75 @@
                             <i class="fas fa-money-bill-wave text-amber-400 mr-2"></i>
                             เงินแดง (ค่าปรับ X5)
                         </label>
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             class="money-input"
                             placeholder="ระบุจำนวนเงินแดง..."
                             x-model="moneyRedAmount"
                             @input="calculateTotal()"
                         >
                     </div>
-                    
+
+                    <!-- Quick Presets -->
+                    <div class="mb-4 p-3 bg-gradient-to-r from-amber-900/20 to-red-900/20 border border-amber-500/30 rounded-xl">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="fas fa-bolt text-amber-400"></i>
+                            <span class="text-slate-200 font-semibold text-sm">⚡ เคสเร่งด่วน (พร้อมประกัน)</span>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                            <button @click="applyQuickPreset('poon', true)"
+                                    class="px-3 py-2.5 bg-slate-800/80 hover:bg-amber-500/20 border border-slate-600 hover:border-amber-500/50 rounded-lg text-slate-300 hover:text-amber-400 text-xs font-medium transition-all flex flex-col items-center gap-1">
+                                <i class="fas fa-cube text-lg"></i>
+                                <span>ปูน + หลบหนี</span>
+                            </button>
+                            <button @click="applyQuickPreset('capab', true)"
+                                    class="px-3 py-2.5 bg-slate-800/80 hover:bg-red-500/20 border border-slate-600 hover:border-red-500/50 rounded-lg text-slate-300 hover:text-red-400 text-xs font-medium transition-all flex flex-col items-center gap-1">
+                                <i class="fas fa-pills text-lg"></i>
+                                <span>แคป A,B + หลบหนี</span>
+                            </button>
+                            <button @click="applyQuickPreset('capghost', true)"
+                                    class="px-3 py-2.5 bg-slate-800/80 hover:bg-purple-500/20 border border-slate-600 hover:border-purple-500/50 rounded-lg text-slate-300 hover:text-purple-400 text-xs font-medium transition-all flex flex-col items-center gap-1">
+                                <i class="fas fa-ghost text-lg"></i>
+                                <span>แคปซูลตัวร้าย + หลบหนี</span>
+                            </button>
+                            <button @click="applyQuickPreset('money', true)"
+                                    class="px-3 py-2.5 bg-slate-800/80 hover:bg-green-500/20 border border-slate-600 hover:border-green-500/50 rounded-lg text-slate-300 hover:text-green-400 text-xs font-medium transition-all flex flex-col items-center gap-1">
+                                <i class="fas fa-money-bill-wave text-lg"></i>
+                                <span>เงินแดง + หลบหนี</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Presets - No Bail -->
+                    <div class="mb-4 p-3 bg-gradient-to-r from-slate-800/50 to-slate-900/50 border border-slate-600/50 rounded-xl">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="fas fa-lock text-slate-400"></i>
+                            <span class="text-slate-300 font-semibold text-sm">🔒 เคสเร่งด่วน (ไม่ประกัน)</span>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                            <button @click="applyQuickPreset('poon', false)"
+                                    class="px-3 py-2.5 bg-slate-800/80 hover:bg-slate-600/30 border border-slate-600 hover:border-slate-500/50 rounded-lg text-slate-300 hover:text-slate-200 text-xs font-medium transition-all flex flex-col items-center gap-1">
+                                <i class="fas fa-cube text-lg"></i>
+                                <span>ปูน + หลบหนี</span>
+                            </button>
+                            <button @click="applyQuickPreset('capab', false)"
+                                    class="px-3 py-2.5 bg-slate-800/80 hover:bg-slate-600/30 border border-slate-600 hover:border-slate-500/50 rounded-lg text-slate-300 hover:text-slate-200 text-xs font-medium transition-all flex flex-col items-center gap-1">
+                                <i class="fas fa-pills text-lg"></i>
+                                <span>แคป A,B + หลบหนี</span>
+                            </button>
+                            <button @click="applyQuickPreset('capghost', false)"
+                                    class="px-3 py-2.5 bg-slate-800/80 hover:bg-slate-600/30 border border-slate-600 hover:border-slate-500/50 rounded-lg text-slate-300 hover:text-slate-200 text-xs font-medium transition-all flex flex-col items-center gap-1">
+                                <i class="fas fa-ghost text-lg"></i>
+                                <span>แคปซูลตัวร้าย + หลบหนี</span>
+                            </button>
+                            <button @click="applyQuickPreset('money', false)"
+                                    class="px-3 py-2.5 bg-slate-800/80 hover:bg-slate-600/30 border border-slate-600 hover:border-slate-500/50 rounded-lg text-slate-300 hover:text-slate-200 text-xs font-medium transition-all flex flex-col items-center gap-1">
+                                <i class="fas fa-money-bill-wave text-lg"></i>
+                                <span>เงินแดง + หลบหนี</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Category 1: Illegal Items -->
                     <div class="category-section">
                         <div class="category-header">

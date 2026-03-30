@@ -10,13 +10,13 @@ function calculatorApp() {
         moneyRedAmount: '',
         useBail: false, // User's bail selection
         notifications: [],
-        
+
         finesData: {
             illegal_items: [
                 { name: 'ปูน', fine: 2000, jail: 10, type: 'normal' },
                 { name: 'แคปซูล (Capsule A)', fine: 3000, jail: 10, type: 'normal' },
                 { name: 'แคปซูล (Capsule B)', fine: 3000, jail: 10, type: 'normal' },
-                { name: 'แคปซูล (Ghost Capsule)', fine: 5000, jail: 10, type: 'normal' },
+                { name: 'แคปซูลตัวร้าย', fine: 5000, jail: 10, type: 'normal' },
                 { name: 'เงินผิดกฎหมาย (เงินแดง)', fine: 0, jail: 15, type: 'normal', multiplier: 'money' }
             ],
             general: [
@@ -55,7 +55,7 @@ function calculatorApp() {
                 { name: 'FULLSYSTEM (3 คดีขึ้นไป)', fine: 200000, jail: 100, type: 'red' }
             ]
         },
-        
+
         results: {
             totalFine: 0,
             totalJail: 0,
@@ -65,9 +65,51 @@ function calculatorApp() {
                 bail: { time: 0, fine: 0 }
             }
         },
-        
+
         init() {
             this.setupNavigation();
+            this.calculateTotal();
+        },
+
+        // Quick Preset Functions
+        applyQuickPreset(type, withBail = true) {
+            this.selectedCharges = [];
+            this.moneyRedAmount = '';
+            this.useBail = withBail;
+
+            if (type === 'poon') {
+                // ปูน + หลบหนี
+                const poon = this.finesData.illegal_items.find(c => c.name === 'ปูน');
+                const escape = this.finesData.general.find(c => c.name === 'หลบหนี');
+                if (poon) this.selectedCharges.push({ ...poon, type: 'illegal_items', quantity: 1 });
+                if (escape) this.selectedCharges.push({ ...escape, type: 'general', quantity: 1 });
+            } else if (type === 'capab') {
+                // แคป A หรือ B (สุ่ม) + หลบหนี
+                const escape = this.finesData.general.find(c => c.name === 'หลบหนี');
+                // สุ่มเลือก A หรือ B
+                const randomCap = Math.random() < 0.5 ? 'แคปซูล (Capsule A)' : 'แคปซูล (Capsule B)';
+                const cap = this.finesData.illegal_items.find(c => c.name === randomCap);
+                if (cap) this.selectedCharges.push({ ...cap, type: 'illegal_items', quantity: 1 });
+                if (escape) this.selectedCharges.push({ ...escape, type: 'general', quantity: 1 });
+            } else if (type === 'capghost') {
+                // แคปซูลตัวร้าย + หลบหนี
+                const ghost = this.finesData.illegal_items.find(c => c.name === 'แคปซูลตัวร้าย');
+                const escape = this.finesData.general.find(c => c.name === 'หลบหนี');
+                if (ghost) this.selectedCharges.push({ ...ghost, type: 'illegal_items', quantity: 1 });
+                if (escape) this.selectedCharges.push({ ...escape, type: 'general', quantity: 1 });
+            } else if (type === 'money') {
+                // เงินแดง + หลบหนี
+                const moneyRed = this.finesData.illegal_items.find(c => c.name === 'เงินผิดกฎหมาย (เงินแดง)');
+                const escape = this.finesData.general.find(c => c.name === 'หลบหนี');
+                if (moneyRed) this.selectedCharges.push({ ...moneyRed, type: 'illegal_items', quantity: 1 });
+                if (escape) this.selectedCharges.push({ ...escape, type: 'general', quantity: 1 });
+                // Focus on money input
+                setTimeout(() => {
+                    const moneyInput = document.querySelector('.money-input');
+                    if (moneyInput) moneyInput.focus();
+                }, 100);
+            }
+
             this.calculateTotal();
         },
 
@@ -193,18 +235,18 @@ function calculatorApp() {
             this.results.totalJail = totalJail;
             this.results.hasRedCase = hasRedCase;
         },
-        
+
         formatNumber(num) {
             return num.toLocaleString('th-TH');
         },
-        
+
         resetForm() {
             this.selectedCharges = [];
             this.moneyRedAmount = '';
             this.useBail = false;
             this.calculateTotal();
         },
-        
+
         copyResult() {
             if (this.selectedCharges.length === 0 && !this.moneyRedAmount) {
                 this.showNotification('กรุณาเลือกข้อหา', 'error');
@@ -224,7 +266,7 @@ function calculatorApp() {
 
             // Check if red case exists
             const hasRedCase = this.selectedCharges.some(c => c.type === 'red_cases');
-            
+
             // Use user's bail selection (but not if red case)
             const canBail = !hasRedCase && this.useBail;
             const bailText = canBail ? 'ประกัน' : 'ไม่ประกัน';
@@ -253,7 +295,7 @@ function calculatorApp() {
                 this.notifications = this.notifications.filter(n => n.id !== id);
             }, 3000);
         },
-        
+
         removeNotification(id) {
             this.notifications = this.notifications.filter(n => n.id !== id);
         }
