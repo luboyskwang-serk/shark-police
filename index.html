@@ -1259,6 +1259,521 @@
                 padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
             }
         }
+
+        /* ===== Complete Responsive Framework ===== */
+        
+        /* Extra Small Mobile (320px - 375px) */
+        @media (max-width: 375px) {
+            .header-content {
+                padding: 0.5rem 0.75rem;
+            }
+
+            .logo-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            .logo-text h1 {
+                font-size: 0.95rem;
+            }
+
+            .taser-icon {
+                width: 22px !important;
+                height: 22px !important;
+            }
+
+            .main-content {
+                padding-top: 65px;
+            }
+
+            .container {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+
+            .card {
+                padding: 0.75rem;
+                border-radius: 12px;
+            }
+
+            .card-header {
+                padding: 0.75rem;
+            }
+
+            .card-title {
+                font-size: 0.95rem;
+            }
+
+            .card-subtitle {
+                font-size: 0.75rem;
+            }
+
+            .card-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            /* Grid Adjustments */
+            .grid,
+            .grid-cols-1,
+            .grid-cols-2,
+            .grid-cols-3,
+            .grid-cols-4 {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            /* Quick Presets */
+            .preset-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preset-btn {
+                min-height: 60px;
+                padding: 0.75rem;
+            }
+
+            .preset-btn i {
+                font-size: 1.25rem;
+            }
+
+            .preset-btn span {
+                font-size: 0.7rem;
+            }
+
+            /* Charges Grid */
+            .charges-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .charge-item {
+                padding: 0.625rem;
+            }
+
+            .charge-name {
+                font-size: 0.75rem;
+            }
+
+            .charge-details {
+                font-size: 0.65rem;
+            }
+
+            .charge-image {
+                width: 32px;
+                height: 32px;
+            }
+
+            .charge-checkbox {
+                width: 18px;
+                height: 18px;
+            }
+
+            /* Money Input */
+            .money-input-wrapper {
+                padding: 0.75rem;
+            }
+
+            .money-input {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            /* Result Panel */
+            .result-panel {
+                padding: 0.75rem;
+            }
+
+            .result-main {
+                padding: 0.75rem;
+            }
+
+            .result-main-value {
+                font-size: 1.5rem;
+            }
+
+            .bail-option {
+                padding: 0.75rem;
+            }
+
+            .action-buttons button {
+                padding: 0.75rem;
+                font-size: 0.85rem;
+                min-height: 44px;
+            }
+
+            /* Tables */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                font-size: 0.75rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.5rem;
+            }
+
+            /* Bottom Nav */
+            .bottom-nav-item {
+                padding: 0.5rem 0.25rem;
+                min-height: 56px;
+            }
+
+            .bottom-nav-icon {
+                font-size: 1.1rem;
+            }
+
+            .bottom-nav-label {
+                font-size: 0.6rem;
+            }
+        }
+
+        /* Small Mobile (376px - 414px) */
+        @media (max-width: 414px) {
+            .header-content {
+                padding: 0.625rem 0.875rem;
+            }
+
+            .logo-icon {
+                width: 38px;
+                height: 38px;
+            }
+
+            .logo-text h1 {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding-top: 70px;
+            }
+
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .charges-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preset-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Medium Mobile (415px - 480px) */
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0.75rem 1rem;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                padding-top: 75px;
+            }
+
+            .grid-cols-2,
+            .grid-cols-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charge-item {
+                padding: 0.75rem;
+            }
+
+            .charge-name {
+                font-size: 0.8rem;
+            }
+
+            .charge-details {
+                font-size: 0.7rem;
+            }
+
+            .charge-image {
+                width: 38px;
+                height: 38px;
+            }
+        }
+
+        /* Large Mobile (481px - 640px) */
+        @media (max-width: 640px) {
+            .header-content {
+                padding: 0.875rem 1rem;
+            }
+
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+
+            .main-content {
+                padding-top: 78px;
+            }
+
+            .grid-cols-3,
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charges-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.625rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+        }
+
+        /* Tablet (641px - 768px) */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem 1.25rem;
+            }
+
+            .logo-text h1 {
+                font-size: 1.3rem;
+            }
+
+            .main-content {
+                padding-top: 80px;
+            }
+
+            .grid-cols-3,
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card {
+                padding: 1.25rem;
+            }
+
+            .card-header {
+                padding: 1rem;
+            }
+
+            .card-title {
+                font-size: 1.1rem;
+            }
+
+            .card-subtitle {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Small Tablet (769px - 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .calculator-layout {
+                grid-template-columns: 1fr 350px;
+            }
+
+            .charges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-cols-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Large Tablet (1025px - 1280px) */
+        @media (min-width: 1025px) and (max-width: 1280px) {
+            .calculator-layout {
+                grid-template-columns: 1fr 380px;
+            }
+
+            .charges-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .grid-cols-4 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Desktop (1281px+) */
+        @media (min-width: 1281px) {
+            .calculator-layout {
+                grid-template-columns: 1fr 400px;
+            }
+
+            .charges-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+
+            .grid-cols-4 {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Landscape Orientation */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .header {
+                transform: scale(0.95);
+                transform-origin: top center;
+            }
+
+            .main-content {
+                padding-top: 60px;
+            }
+
+            .charges-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .charge-item {
+                padding: 0.5rem;
+            }
+
+            .charge-name {
+                font-size: 0.75rem;
+            }
+
+            .charge-details {
+                font-size: 0.65rem;
+            }
+
+            .charge-image {
+                width: 30px;
+                height: 30px;
+            }
+
+            .result-panel {
+                padding: 0.75rem;
+            }
+
+            .result-main-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Ultra Wide (1920px+) */
+        @media (min-width: 1920px) {
+            .container {
+                max-width: 1600px;
+            }
+
+            .calculator-layout {
+                grid-template-columns: 1fr 450px;
+            }
+
+            .charges-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+
+            .result-main-value {
+                font-size: 3rem;
+            }
+        }
+
+        /* Touch-Friendly Adjustments */
+        @media (hover: none) and (pointer: coarse) {
+            button,
+            .btn,
+            .charge-item,
+            .checkbox-wrapper {
+                min-height: 48px;
+            }
+
+            input,
+            textarea,
+            select {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .nav-link,
+            .bottom-nav-item {
+                min-height: 44px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .header,
+            .footer,
+            .bottom-nav,
+            .action-buttons,
+            .nav,
+            .quick-presets-mobile,
+            .quick-presets-desktop {
+                display: none !important;
+            }
+
+            .main-content {
+                padding-top: 0;
+            }
+
+            .calculator-layout {
+                display: block;
+            }
+
+            .result-panel {
+                position: static;
+                border: 1px solid #000;
+                page-break-inside: avoid;
+            }
+
+            body {
+                background: #fff;
+                color: #000;
+            }
+
+            .card {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            .charge-item {
+                border: 2px solid #0ea5e9;
+            }
+
+            .result-panel {
+                border: 2px solid #0ea5e9;
+            }
+
+            .bottom-nav {
+                border-top: 2px solid #0ea5e9;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 <body x-data="calculatorApp()" x-init="init()">
