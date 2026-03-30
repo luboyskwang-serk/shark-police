@@ -2,7 +2,10 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#020617">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="author" content="Kaneji Nightfall">
     <meta name="copyright" content="Shark Police - All Rights Reserved">
     <meta name="robots" content="noindex, nofollow">
@@ -375,6 +378,549 @@
                 filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.9)) rotate(-5deg);
             }
         }
+
+        /* ===== Responsive - Mobile First ===== */
+        /* Small Mobile (320px - 375px) */
+        @media (max-width: 375px) {
+            .header-content {
+                padding: 0.75rem 1rem;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.1rem;
+            }
+
+            .nav-link {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .nav-link span {
+                display: none;
+            }
+
+            .nav-link i {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding-top: 70px;
+            }
+
+            .calculator-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .charges-section {
+                padding: 1rem;
+            }
+
+            .category-header {
+                padding: 0.75rem;
+            }
+
+            .category-title {
+                font-size: 1rem;
+            }
+
+            .charges-grid {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .charge-item {
+                padding: 0.75rem;
+            }
+
+            .charge-name {
+                font-size: 0.85rem;
+            }
+
+            .charge-details {
+                font-size: 0.7rem;
+            }
+
+            .charge-image {
+                width: 40px;
+                height: 40px;
+            }
+
+            .result-panel {
+                position: static;
+                padding: 1rem;
+            }
+
+            .result-main-value {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons button {
+                width: 100%;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .card-header {
+                padding: 0.75rem;
+            }
+
+            .card-title {
+                font-size: 1rem;
+            }
+
+            .grid-cols-1,
+            .grid-cols-2,
+            .grid-cols-3,
+            .grid-cols-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Mobile (376px - 480px) */
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0.75rem 1rem;
+            }
+
+            .logo-icon {
+                width: 42px;
+                height: 42px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+
+            .nav {
+                gap: 0.25rem;
+            }
+
+            .nav-link {
+                padding: 0.5rem 0.7rem;
+                font-size: 0.8rem;
+            }
+
+            .nav-link span {
+                display: none;
+            }
+
+            .nav-link i {
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                padding-top: 75px;
+            }
+
+            .calculator-layout {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+
+            .charges-section {
+                padding: 1.25rem;
+            }
+
+            .charges-grid {
+                grid-template-columns: 1fr;
+                gap: 0.625rem;
+            }
+
+            .charge-item {
+                padding: 0.875rem;
+            }
+
+            .charge-image {
+                width: 42px;
+                height: 42px;
+            }
+
+            .result-panel {
+                position: static;
+                padding: 1.25rem;
+            }
+
+            .result-main-value {
+                font-size: 2.25rem;
+            }
+
+            .bail-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Medium Mobile (481px - 640px) */
+        @media (max-width: 640px) {
+            .header-content {
+                padding: 1rem;
+            }
+
+            .logo-text h1 {
+                font-size: 1.3rem;
+            }
+
+            .nav-link {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            .nav-link span {
+                display: none;
+            }
+
+            .main-content {
+                padding-top: 80px;
+            }
+
+            .calculator-layout {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .charges-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-panel {
+                position: static;
+            }
+
+            .grid-cols-2,
+            .grid-cols-3,
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .toast {
+                min-width: auto;
+                margin: 0 1rem;
+                max-width: calc(100% - 2rem);
+            }
+        }
+
+        /* Tablet (641px - 768px) */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .main-content {
+                padding-top: 85px;
+            }
+
+            .calculator-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .charges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .result-panel {
+                position: static;
+                margin-top: 1rem;
+            }
+
+            .grid-cols-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal-content {
+                max-height: 90vh;
+                border-radius: 20px;
+            }
+
+            .modal-header {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .modal-body {
+                padding: 2rem 1.25rem;
+            }
+
+            .modal-footer {
+                padding: 1.5rem 1.25rem;
+                flex-direction: column;
+            }
+
+            .btn-copy {
+                width: 100%;
+            }
+        }
+
+        /* Large Mobile Landscape (769px - 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .calculator-layout {
+                grid-template-columns: 1fr 350px;
+            }
+
+            .charges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-cols-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* General Mobile Optimizations */
+        @media (max-width: 768px) {
+            /* Container padding */
+            .container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            /* Card adjustments */
+            .card {
+                border-radius: 12px;
+            }
+
+            /* Button sizing */
+            button,
+            .btn {
+                min-height: 44px; /* Touch-friendly */
+            }
+
+            /* Input sizing */
+            input,
+            textarea,
+            select {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            /* Image responsiveness */
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* Text adjustments */
+            p,
+            span,
+            div {
+                word-wrap: break-word;
+            }
+
+            /* Grid adjustments */
+            .grid {
+                gap: 0.75rem;
+            }
+        }
+
+        /* Touch-friendly adjustments */
+        @media (hover: none) and (pointer: coarse) {
+            .charge-item {
+                min-height: 60px;
+            }
+
+            button {
+                min-height: 48px;
+            }
+
+            .nav-link {
+                min-height: 44px;
+            }
+        }
+
+        /* Landscape orientation */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .main-content {
+                padding-top: 60px;
+            }
+
+            .header {
+                transform: scale(0.9);
+                transform-origin: top center;
+            }
+
+            .charges-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* iPhone SE (320px) */
+        @media (max-width: 320px) {
+            .logo-text h1 {
+                font-size: 1rem;
+            }
+
+            .logo-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            .taser-icon {
+                width: 24px !important;
+                height: 24px !important;
+            }
+
+            .nav-link {
+                padding: 0.35rem 0.5rem;
+            }
+
+            .charge-name {
+                font-size: 0.8rem;
+            }
+
+            .charge-details {
+                font-size: 0.65rem;
+            }
+
+            .charge-image {
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        /* Foldable devices */
+        @media (max-width: 720px) and (min-width: 500px) {
+            .charges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .header,
+            .footer,
+            .action-buttons,
+            .nav {
+                display: none !important;
+            }
+
+            .main-content {
+                padding-top: 0;
+            }
+
+            .calculator-layout {
+                display: block;
+            }
+
+            .result-panel {
+                position: static;
+                border: 1px solid #000;
+            }
+        }
+
+        /* ===== Mobile Menu Styles ===== */
+        .mobile-menu-btn {
+            display: none;
+            background: rgba(14, 165, 233, 0.2);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            color: #0ea5e9;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background: rgba(14, 165, 233, 0.3);
+            border-color: rgba(14, 165, 233, 0.5);
+        }
+
+        .mobile-menu {
+            display: none;
+            background: rgba(15, 23, 42, 0.98);
+            border-top: 1px solid rgba(14, 165, 233, 0.2);
+            padding: 1rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            min-height: 48px;
+        }
+
+        .mobile-nav-link:hover {
+            background: rgba(14, 165, 233, 0.1);
+            color: #fff;
+        }
+
+        .mobile-nav-link.active {
+            background: rgba(14, 165, 233, 0.2);
+            color: #fff;
+        }
+
+        .mobile-nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Show mobile menu button on mobile */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .nav {
+                display: none;
+            }
+        }
+
+        /* Hide mobile menu on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body x-data="calculatorApp()" x-init="init()">
@@ -386,8 +932,8 @@
             <a href="index.html" class="logo">
                 <div class="logo-icon relative group" style="background: transparent; border: none; box-shadow: none;">
                     <div class="relative w-full h-full" style="animation: rotateLogo 3s linear infinite;">
-                        <img src="https://media.discordapp.net/attachments/1473600607410589812/1475170778743050361/LOGO_Shark_Community_OK02-01.png?ex=69c9ff19&is=69c8ad99&hm=7d43a72f4ca3edfcbce33f359ff3cb675641cfb2e2327961c1b727ae53cddc61&=&format=webp&quality=lossless&width=1113&height=594" 
-                             alt="Shark Police Logo" 
+                        <img src="https://media.discordapp.net/attachments/1473600607410589812/1475170778743050361/LOGO_Shark_Community_OK02-01.png?ex=69c9ff19&is=69c8ad99&hm=7d43a72f4ca3edfcbce33f359ff3cb675641cfb2e2327961c1b727ae53cddc61&=&format=webp&quality=lossless&width=1113&height=594"
+                             alt="Shark Police Logo"
                              class="w-full h-full object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-300">
                     </div>
                 </div>
@@ -405,7 +951,8 @@
                     <span class="text-xs bg-gradient-to-r from-slate-500 to-slate-600 bg-clip-text text-transparent">v.0.0.2</span>
                 </div>
             </a>
-            
+
+            <!-- Desktop Nav -->
             <nav class="nav">
                 <a href="#calculator" class="nav-link active">
                     <i class="fas fa-calculator"></i>
@@ -436,9 +983,48 @@
                     <span>แนวทางปฏิบัติ</span>
                 </a>
             </nav>
-            
+
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn md:hidden" @click="mobileMenuOpen = !mobileMenuOpen" aria-label="เมนู">
+                <i class="fas fa-bars"></i>
+            </button>
+
             <div class="text-right">
             </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" :class="{ 'active': mobileMenuOpen }" x-show="mobileMenuOpen" x-cloak>
+            <nav class="mobile-nav">
+                <a href="#calculator" class="mobile-nav-link" @click="mobileMenuOpen = false">
+                    <i class="fas fa-calculator"></i>
+                    <span>คำนวณค่าปรับ</span>
+                </a>
+                <a href="#rules" class="mobile-nav-link" @click="mobileMenuOpen = false">
+                    <i class="fas fa-book-open"></i>
+                    <span>กฎระเบียบ</span>
+                </a>
+                <a href="#fines-table" class="mobile-nav-link" @click="mobileMenuOpen = false">
+                    <i class="fas fa-table"></i>
+                    <span>ตารางค่าปรับ</span>
+                </a>
+                <a href="#arrest" class="mobile-nav-link" @click="mobileMenuOpen = false">
+                    <i class="fas fa-handcuffs"></i>
+                    <span>การจับกุม</span>
+                </a>
+                <a href="announcements.html" class="mobile-nav-link">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>ข้อความประกาศ</span>
+                </a>
+                <a href="uniforms.html" class="mobile-nav-link">
+                    <i class="fas fa-tshirt"></i>
+                    <span>เลขชุด</span>
+                </a>
+                <a href="guides.html" class="mobile-nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>แนวทางปฏิบัติ</span>
+                </a>
+            </nav>
         </div>
     </header>
     

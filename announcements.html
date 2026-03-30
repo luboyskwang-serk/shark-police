@@ -2,7 +2,10 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#020617">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="author" content="Kaneji Nightfall">
     <meta name="copyright" content="Shark Police - All Rights Reserved">
     <meta name="robots" content="noindex, nofollow">
@@ -315,6 +318,115 @@
             .btn-copy { width: 100%; }
             .modal-title { font-size: 1.15rem; }
             .modal-title-icon { width: 42px; height: 42px; font-size: 1.1rem; }
+
+            .header-content {
+                padding: 0.75rem 1rem;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.1rem;
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .main-content {
+                padding-top: 70px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .announcement-card {
+                padding: 1rem;
+            }
+        }
+
+        /* Small Mobile (320px - 375px) */
+        @media (max-width: 375px) {
+            .logo-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            .logo-text h1 {
+                font-size: 1rem;
+            }
+
+            .taser-icon {
+                width: 24px !important;
+                height: 24px !important;
+            }
+
+            .main-content {
+                padding-top: 65px;
+            }
+        }
+
+        /* Mobile (376px - 480px) */
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0.75rem 1rem;
+            }
+
+            .logo-icon {
+                width: 42px;
+                height: 42px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+
+            .main-content {
+                padding-top: 75px;
+            }
+
+            .container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        /* Medium Mobile (481px - 640px) */
+        @media (max-width: 640px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .toast {
+                min-width: auto;
+                margin: 0 1rem;
+                max-width: calc(100% - 2rem);
+            }
+        }
+
+        /* Landscape orientation */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .main-content {
+                padding-top: 60px;
+            }
+
+            .header {
+                transform: scale(0.9);
+                transform-origin: top center;
+            }
+        }
+
+        /* Touch-friendly */
+        @media (hover: none) and (pointer: coarse) {
+            button,
+            .announcement-card {
+                min-height: 48px;
+            }
         }
 
         /* ===== Taser Icon Animation ===== */
