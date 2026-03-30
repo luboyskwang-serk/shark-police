@@ -50,7 +50,7 @@
         @media (max-width: 768px) {
             .calculator-layout {
                 grid-template-columns: 1fr;
-                gap: 0;
+                gap: 1rem;
                 padding-bottom: 100px;
             }
 
@@ -63,22 +63,18 @@
 
             .result-panel {
                 order: 2;
-                position: fixed;
+                position: relative;
                 bottom: 0;
                 left: 0;
                 right: 0;
-                border-radius: 20px 20px 0 0;
+                border-radius: 16px;
                 padding: 1rem;
                 z-index: 100;
-                box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
                 border: 1px solid rgba(14, 165, 233, 0.2);
-                border-bottom: none;
-                max-height: 85vh;
-                overflow-y: auto;
-            }
-
-            .result-panel::-webkit-scrollbar {
-                width: 4px;
+                height: auto;
+                max-height: none;
+                overflow: visible;
             }
         }
 
@@ -420,41 +416,42 @@
             height: fit-content;
         }
 
-        /* Mobile Result Panel Compact */
+        /* Mobile Result Panel - No Scroll */
         @media (max-width: 768px) {
             .result-panel {
-                padding: 0.75rem;
+                position: relative;
+                top: 0;
+                padding: 1rem;
+                border-radius: 16px;
+                border: 1px solid rgba(14, 165, 233, 0.2);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             }
 
             .result-main {
-                padding: 0.75rem;
-                margin-bottom: 0.75rem;
+                padding: 1rem;
+                margin-bottom: 1rem;
             }
 
             .result-main-value {
-                font-size: 1.75rem;
-            }
-
-            .result-main .text-slate-400 {
-                font-size: 0.75rem;
+                font-size: 2rem;
             }
 
             .bail-options {
-                margin-top: 0.75rem;
+                margin-top: 1rem;
             }
 
             .bail-option {
-                padding: 0.75rem;
-                margin-bottom: 0.5rem;
+                padding: 1rem;
+                margin-bottom: 0.75rem;
             }
 
             .action-buttons {
-                margin-top: 0.75rem;
+                margin-top: 1rem;
             }
 
             .result-title {
-                font-size: 1rem;
-                margin-bottom: 0.75rem;
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
             }
         }
         
@@ -1126,14 +1123,107 @@
             text-align: center;
         }
 
-        /* Show mobile menu button on mobile */
+        /* ===== Modern Bottom Navigation (App Style) ===== */
+        .bottom-nav {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .mobile-menu-btn {
-                display: flex;
+                display: none;
             }
 
             .nav {
                 display: none;
+            }
+
+            .bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(15, 23, 42, 0.98);
+                backdrop-filter: blur(20px);
+                border-top: 1px solid rgba(14, 165, 233, 0.2);
+                z-index: 1000;
+                padding: 0.5rem;
+                padding-bottom: env(safe-area-inset-bottom);
+                box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+            }
+
+            .bottom-nav-item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 0.25rem;
+                padding: 0.75rem 0.5rem;
+                color: #64748b;
+                text-decoration: none;
+                border-radius: 12px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                min-height: 60px;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .bottom-nav-item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), transparent);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .bottom-nav-item:hover::before {
+                opacity: 1;
+            }
+
+            .bottom-nav-item.active {
+                color: #0ea5e9;
+                background: rgba(14, 165, 233, 0.1);
+            }
+
+            .bottom-nav-item.active .bottom-nav-icon {
+                transform: translateY(-2px);
+                filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.6));
+            }
+
+            .bottom-nav-item:active {
+                transform: scale(0.95);
+            }
+
+            .bottom-nav-icon {
+                font-size: 1.25rem;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+                z-index: 1;
+            }
+
+            .bottom-nav-label {
+                font-size: 0.65rem;
+                font-weight: 500;
+                white-space: nowrap;
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Active indicator dot */
+            .bottom-nav-item.active::after {
+                content: '';
+                position: absolute;
+                bottom: 4px;
+                width: 4px;
+                height: 4px;
+                background: #0ea5e9;
+                border-radius: 50%;
+                box-shadow: 0 0 8px rgba(14, 165, 233, 0.8);
             }
         }
 
@@ -1141,6 +1231,32 @@
         @media (min-width: 769px) {
             .mobile-menu {
                 display: none !important;
+            }
+
+            .bottom-nav {
+                display: none !important;
+            }
+        }
+
+        /* Footer hide on mobile */
+        @media (max-width: 768px) {
+            .footer {
+                display: none;
+            }
+
+            .mobile-bottom-spacer {
+                height: 100px;
+            }
+        }
+
+        .mobile-bottom-spacer {
+            display: none;
+        }
+
+        /* Adjust bottom nav position for result panel */
+        @media (max-width: 768px) {
+            .bottom-nav {
+                padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
             }
         }
     </style>
@@ -1206,50 +1322,35 @@
                 </a>
             </nav>
 
-            <!-- Mobile Menu Button -->
-            <button class="mobile-menu-btn md:hidden" @click="mobileMenuOpen = !mobileMenuOpen" aria-label="เมนู">
-                <i class="fas fa-bars"></i>
-            </button>
-
             <div class="text-right">
             </div>
         </div>
-
-        <!-- Mobile Menu -->
-        <div class="mobile-menu" :class="{ 'active': mobileMenuOpen }" x-show="mobileMenuOpen" x-cloak>
-            <nav class="mobile-nav">
-                <a href="#calculator" class="mobile-nav-link" @click="mobileMenuOpen = false">
-                    <i class="fas fa-calculator"></i>
-                    <span>คำนวณค่าปรับ</span>
-                </a>
-                <a href="#rules" class="mobile-nav-link" @click="mobileMenuOpen = false">
-                    <i class="fas fa-book-open"></i>
-                    <span>กฎระเบียบ</span>
-                </a>
-                <a href="#fines-table" class="mobile-nav-link" @click="mobileMenuOpen = false">
-                    <i class="fas fa-table"></i>
-                    <span>ตารางค่าปรับ</span>
-                </a>
-                <a href="#arrest" class="mobile-nav-link" @click="mobileMenuOpen = false">
-                    <i class="fas fa-handcuffs"></i>
-                    <span>การจับกุม</span>
-                </a>
-                <a href="announcements.html" class="mobile-nav-link">
-                    <i class="fas fa-bullhorn"></i>
-                    <span>ข้อความประกาศ</span>
-                </a>
-                <a href="uniforms.html" class="mobile-nav-link">
-                    <i class="fas fa-tshirt"></i>
-                    <span>เลขชุด</span>
-                </a>
-                <a href="guides.html" class="mobile-nav-link">
-                    <i class="fas fa-clipboard-list"></i>
-                    <span>แนวทางปฏิบัติ</span>
-                </a>
-            </nav>
-        </div>
     </header>
-    
+
+    <!-- Bottom Navigation (Mobile App Style) -->
+    <nav class="bottom-nav">
+        <a href="#calculator" class="bottom-nav-item active">
+            <i class="fas fa-calculator bottom-nav-icon"></i>
+            <span class="bottom-nav-label">คำนวณ</span>
+        </a>
+        <a href="#rules" class="bottom-nav-item">
+            <i class="fas fa-book-open bottom-nav-icon"></i>
+            <span class="bottom-nav-label">กฎระเบียบ</span>
+        </a>
+        <a href="#fines-table" class="bottom-nav-item">
+            <i class="fas fa-table bottom-nav-icon"></i>
+            <span class="bottom-nav-label">ตารางค่าปรับ</span>
+        </a>
+        <a href="#arrest" class="bottom-nav-item">
+            <i class="fas fa-handcuffs bottom-nav-icon"></i>
+            <span class="bottom-nav-label">การจับกุม</span>
+        </a>
+        <a href="announcements.html" class="bottom-nav-item">
+            <i class="fas fa-bullhorn bottom-nav-icon"></i>
+            <span class="bottom-nav-label">ประกาศ</span>
+        </a>
+    </nav>
+
     <!-- Main Content -->
     <main class="main-content">
         <div class="container mx-auto px-4">
@@ -1260,7 +1361,7 @@
                     <span>Created by <strong class="text-sky-400">Kaneji Nightfall</strong></span>
                 </div>
             </div>
-            
+
             <!-- Rules Section -->
             <div id="rules" class="mb-8" x-show="currentSection === 'rules'" x-cloak>
                 <!-- Rules Grid -->
@@ -2487,7 +2588,10 @@
             <p>Shark Police v.0.0.2 | Created by <strong class="text-sky-400">Kaneji Nightfall</strong></p>
         </div>
     </footer>
-    
+
+    <!-- Mobile Bottom Spacer -->
+    <div class="mobile-bottom-spacer"></div>
+
     <!-- App Script -->
     <script src="assets/js/app-simple.js"></script>
     

@@ -70,6 +70,29 @@ function calculatorApp() {
         init() {
             this.setupNavigation();
             this.calculateTotal();
+            this.setupBottomNav();
+        },
+
+        setupBottomNav() {
+            window.addEventListener('hashchange', () => {
+                this.updateBottomNavActive();
+            });
+            
+            setTimeout(() => {
+                this.updateBottomNavActive();
+            }, 100);
+        },
+
+        updateBottomNavActive() {
+            const hash = window.location.hash.slice(1) || 'calculator';
+            
+            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                item.classList.remove('active');
+                const href = item.getAttribute('href');
+                if (href === `#${hash}`) {
+                    item.classList.add('active');
+                }
+            });
         },
 
         // Quick Preset Functions

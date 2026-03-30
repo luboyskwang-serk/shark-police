@@ -443,6 +443,92 @@
                 filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.9)) rotate(-5deg);
             }
         }
+
+        /* ===== Modern Bottom Navigation (App Style) ===== */
+        .bottom-nav {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(15, 23, 42, 0.98);
+                backdrop-filter: blur(20px);
+                border-top: 1px solid rgba(14, 165, 233, 0.2);
+                z-index: 1000;
+                padding: 0.5rem;
+                padding-bottom: env(safe-area-inset-bottom);
+                box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+            }
+
+            .bottom-nav-item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 0.25rem;
+                padding: 0.75rem 0.5rem;
+                color: #64748b;
+                text-decoration: none;
+                border-radius: 12px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                min-height: 60px;
+                position: relative;
+            }
+
+            .bottom-nav-item.active {
+                color: #0ea5e9;
+                background: rgba(14, 165, 233, 0.1);
+            }
+
+            .bottom-nav-item.active .bottom-nav-icon {
+                transform: translateY(-2px);
+                filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.6));
+            }
+
+            .bottom-nav-item:active {
+                transform: scale(0.95);
+            }
+
+            .bottom-nav-icon {
+                font-size: 1.25rem;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .bottom-nav-label {
+                font-size: 0.65rem;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+            .bottom-nav-item.active::after {
+                content: '';
+                position: absolute;
+                bottom: 4px;
+                width: 4px;
+                height: 4px;
+                background: #0ea5e9;
+                border-radius: 50%;
+                box-shadow: 0 0 8px rgba(14, 165, 233, 0.8);
+            }
+
+            .footer {
+                display: none;
+            }
+
+            .mobile-bottom-spacer {
+                height: 80px;
+            }
+        }
+
+        .mobile-bottom-spacer {
+            display: none;
+        }
     </style>
 </head>
 <body x-data="announcementApp()" x-init="init()">
@@ -508,6 +594,30 @@
             <div class="text-right"></div>
         </div>
     </header>
+
+    <!-- Bottom Navigation (Mobile App Style) -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-calculator bottom-nav-icon"></i>
+            <span class="bottom-nav-label">คำนวณ</span>
+        </a>
+        <a href="index.html#rules" class="bottom-nav-item">
+            <i class="fas fa-book-open bottom-nav-icon"></i>
+            <span class="bottom-nav-label">กฎระเบียบ</span>
+        </a>
+        <a href="index.html#fines-table" class="bottom-nav-item">
+            <i class="fas fa-table bottom-nav-icon"></i>
+            <span class="bottom-nav-label">ตารางค่าปรับ</span>
+        </a>
+        <a href="index.html#arrest" class="bottom-nav-item">
+            <i class="fas fa-handcuffs bottom-nav-icon"></i>
+            <span class="bottom-nav-label">การจับกุม</span>
+        </a>
+        <a href="announcements.html" class="bottom-nav-item active">
+            <i class="fas fa-bullhorn bottom-nav-icon"></i>
+            <span class="bottom-nav-label">ประกาศ</span>
+        </a>
+    </nav>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -697,6 +807,9 @@
             <p>Shark Police v.0.0.2 | Created by <strong class="text-sky-400">Kaneji Nightfall</strong></p>
         </div>
     </footer>
+
+    <!-- Mobile Bottom Spacer -->
+    <div class="mobile-bottom-spacer"></div>
 
     <!-- Modern Modal Popup -->
     <div class="modal-backdrop"
