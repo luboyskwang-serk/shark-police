@@ -1,8 +1,8 @@
-# 🦈 Shark Police v.0.0.1
+# 🦈 Shark Police v.0.0.2
 
 ระบบคำนวณค่าปรับตำรวจ - Police Fine Calculation System for Roleplay Community
 
-![Version](https://img.shields.io/badge/version-0.0.1-blue.svg)
+![Version](https://img.shields.io/badge/version-0.0.2-blue.svg)
 ![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red.svg)
 
 ## 📋 เกี่ยวกับโปรเจค

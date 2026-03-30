@@ -6,7 +6,7 @@
     <meta name="author" content="Kaneji Nightfall">
     <meta name="copyright" content="Shark Police - All Rights Reserved">
     <meta name="robots" content="noindex, nofollow">
-    <title>Shark Police v.0.0.1 - ระบบคำนวณค่าปรับ</title>
+    <title>Shark Police v.0.0.2 - ระบบคำนวณค่าปรับ</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -105,18 +105,24 @@
             transition: all 0.3s ease;
             border: 1px solid transparent;
             user-select: none;
+            align-items: flex-start;
         }
-        
+
         .charge-item:hover {
             background: rgba(14, 165, 233, 0.1);
             transform: translateY(-2px);
         }
-        
+
         .charge-item.selected {
             background: rgba(14, 165, 233, 0.15);
             border-color: rgba(14, 165, 233, 0.3);
         }
         
+        .charge-item.selected .charge-checkbox {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border-color: #0ea5e9;
+        }
+
         .charge-checkbox {
             width: 22px;
             height: 22px;
@@ -129,12 +135,7 @@
             justify-content: center;
             transition: all 0.3s ease;
         }
-        
-        .charge-item.selected .charge-checkbox {
-            background: linear-gradient(135deg, #0ea5e9, #6366f1);
-            border-color: #0ea5e9;
-        }
-        
+
         .charge-checkbox i {
             color: #fff;
             font-size: 0.75rem;
@@ -142,37 +143,65 @@
             transform: scale(0);
             transition: all 0.2s ease;
         }
-        
+
         .charge-item.selected .charge-checkbox i {
             opacity: 1;
             transform: scale(1);
         }
-        
+
         .charge-info {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            min-width: 0;
         }
-        
+
         .charge-name {
             color: #cbd5e1;
             font-weight: 500;
             font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        
+
         .charge-details {
             display: flex;
             gap: 1rem;
-            margin-top: 0.25rem;
             font-size: 0.8rem;
+            flex-wrap: wrap;
         }
-        
+
         .charge-fine {
             color: #fbbf24;
+            white-space: nowrap;
         }
-        
+
         .charge-jail {
             color: #f87171;
+            white-space: nowrap;
         }
-        
+
+        .charge-image-wrapper {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-left: 0.5rem;
+            margin-top: 2px;
+        }
+
+        .charge-image {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            background: rgba(15, 23, 42, 0.5);
+            padding: 0.25rem;
+        }
+
         .quantity-wrapper {
             display: none;
         }
@@ -331,6 +360,21 @@
         .creator-badge strong {
             color: #0ea5e9;
         }
+
+        /* ===== Taser Icon Animation ===== */
+        .taser-icon {
+            animation: taserGlow 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.6));
+        }
+
+        @keyframes taserGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.6)) rotate(0deg);
+            }
+            50% {
+                filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.9)) rotate(-5deg);
+            }
+        }
     </style>
 </head>
 <body x-data="calculatorApp()" x-init="init()">
@@ -353,9 +397,12 @@
                             Shark Police
                             <div class="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-sky-500 to-indigo-500 opacity-50"></div>
                         </span>
-                        <i class="fas fa-shark text-sky-400 animate-bounce text-sm" style="animation-duration: 2s;"></i>
+                        <img src="https://media.discordapp.net/attachments/1485527756782571530/1488158829542899812/WEAPON_STUNGUN.png?ex=69cbc369&is=69ca71e9&hm=65b2974d50436871b54d2959bc0990021b5f15bf5b0350d4daa059d04b8ade12&=&format=webp&quality=lossless"
+                             alt="Taser"
+                             class="taser-icon drop-shadow-lg"
+                             style="width: 28px; height: 28px; object-fit: contain;">
                     </h1>
-                    <span class="text-xs bg-gradient-to-r from-slate-500 to-slate-600 bg-clip-text text-transparent">v.0.0.1</span>
+                    <span class="text-xs bg-gradient-to-r from-slate-500 to-slate-600 bg-clip-text text-transparent">v.0.0.2</span>
                 </div>
             </a>
             
@@ -1173,7 +1220,7 @@
                         
                         <div class="charges-grid">
                             <template x-for="charge in finesData.illegal_items" :key="charge.name">
-                                <div 
+                                <div
                                     class="charge-item"
                                     :class="{ 'selected': isChargeSelected(charge) }"
                                     @click="toggleCharge(charge, 'illegal_items')"
@@ -1198,6 +1245,10 @@
                                                 <i class="fas fa-times mr-1"></i>5
                                             </span>
                                         </div>
+                                    </div>
+                                    <!-- Item Image - Right Side -->
+                                    <div class="charge-image-wrapper" x-show="charge.image">
+                                        <img :src="charge.image" :alt="charge.name" class="charge-image">
                                     </div>
                                     <div class="quantity-wrapper" x-show="isChargeSelected(charge) && !charge.multiplier">
                                         <input 
@@ -1254,6 +1305,10 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <!-- Item Image - Right Side -->
+                                    <div class="charge-image-wrapper" x-show="charge.image">
+                                        <img :src="charge.image" :alt="charge.name" class="charge-image">
+                                    </div>
                                 </div>
                             </template>
                         </div>
@@ -1294,6 +1349,10 @@
                                                 <span x-text="charge.jail + ' นาที'"></span>
                                             </span>
                                         </div>
+                                    </div>
+                                    <!-- Item Image - Right Side -->
+                                    <div class="charge-image-wrapper" x-show="charge.image">
+                                        <img :src="charge.image" :alt="charge.name" class="charge-image">
                                     </div>
                                 </div>
                             </template>
@@ -1525,7 +1584,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-credit">
-            <p>Shark Police v.0.0.1 | Created by <strong class="text-sky-400">Kaneji Nightfall</strong></p>
+            <p>Shark Police v.0.0.2 | Created by <strong class="text-sky-400">Kaneji Nightfall</strong></p>
         </div>
     </footer>
     
