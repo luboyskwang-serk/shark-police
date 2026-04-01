@@ -1,7 +1,150 @@
 /**
- * Shark Police v.0.0.2 - Simple Calculator (No Login)
+ * Shark Police v.0.0.3 - Simple Calculator (No Login)
  * Created by Kaneji Nightfall
+ *
+ * Stability Improvements:
+ * - Error handling with try-catch blocks
+ * - Input validation and sanitization
+ * - Null/undefined checks
+ * - Memory leak prevention
+ * - Graceful degradation
  */
+
+// ===== Sound Effect System =====
+const SoundFX = {
+    enabled: true,
+    sounds: {},
+    volume: 0.5,
+    initialized: false,
+    basePath: '', // Will be set dynamically
+
+    init() {
+        // Prevent double initialization
+        if (this.initialized) return;
+
+        // Detect base path dynamically
+        this.basePath = window.location.protocol + '//' + window.location.host;
+        const pathParts = window.location.pathname.split('/');
+        if (pathParts.length > 2) {
+            // Remove last folder/file
+            pathParts.pop();
+            this.basePath += pathParts.join('/');
+        }
+
+        // Load all sounds with relative paths
+        this.sounds = {
+            toggle: this.loadSound('./assets/sounds/toggle.mp3'),
+            switch: this.loadSound('./assets/sounds/switch.mp3'),
+            beep1: this.loadSound('./assets/sounds/beep1.mp3'),
+            close_ui: this.loadSound('./assets/sounds/close_ui.mp3'),
+            button_click: this.loadSound('./assets/sounds/button_click.mp3'),
+            typing: this.loadSound('./assets/sounds/typing.mp3'),
+            open_ui: this.loadSound('./assets/sounds/open_ui.mp3'),
+            swoosh: this.loadSound('./assets/sounds/swoosh.mp3')
+        };
+
+        // Load saved preference
+        const saved = localStorage.getItem('sharkPoliceSoundEnabled');
+        if (saved !== null) {
+            this.enabled = saved === 'true';
+        }
+
+        // Setup toggle button after DOM is ready
+        setTimeout(() => {
+            this.setupToggle();
+            this.updateIcon();
+        }, 100);
+
+        this.initialized = true;
+        console.log('[SoundFX] Initialized with', Object.keys(this.sounds).length, 'sounds');
+    },
+
+    loadSound(path) {
+        try {
+            const audio = new Audio(path);
+            audio.preload = 'auto';
+            audio.volume = this.volume;
+            
+            // Add error logging
+            audio.addEventListener('error', (e) => {
+                console.warn('[SoundFX] Failed to load:', path, e);
+            });
+            
+            audio.addEventListener('canplaythrough', () => {
+                console.log('[SoundFX] Loaded:', path);
+            });
+            
+            return audio;
+        } catch (e) {
+            console.warn('[SoundFX] Failed to load sound:', path, e);
+            return null;
+        }
+    },
+
+    play(soundName) {
+        if (!this.enabled || !this.sounds[soundName]) {
+            return;
+        }
+
+        try {
+            const sound = this.sounds[soundName].cloneNode();
+            sound.volume = this.volume;
+            
+            // Play with error handling
+            const playPromise = sound.play();
+            if (playPromise !== undefined) {
+                playPromise.catch((error) => {
+                    // Auto-play was prevented
+                    console.log('[SoundFX] Play prevented:', error);
+                });
+            }
+        } catch (e) {
+            // Silently fail
+        }
+    },
+    
+    setupToggle() {
+        const btn = document.getElementById('soundToggle');
+        console.log('SoundFX: Setting up toggle, button found:', !!btn);
+        if (btn) {
+            // Remove any existing listeners
+            if (this._toggleHandler) {
+                btn.removeEventListener('click', this._toggleHandler);
+            }
+            this._toggleHandler = () => {
+                console.log('SoundFX: Toggle clicked, current state:', this.enabled);
+                this.toggle();
+                this.play('switch');
+            };
+            btn.addEventListener('click', this._toggleHandler);
+            console.log('SoundFX: Toggle listener attached');
+        } else {
+            console.warn('SoundFX: Toggle button not found in DOM');
+        }
+    },
+    
+    toggle() {
+        this.enabled = !this.enabled;
+        localStorage.setItem('sharkPoliceSoundEnabled', this.enabled.toString());
+        this.updateIcon();
+    },
+    
+    updateIcon() {
+        const icon = document.getElementById('soundIcon');
+        const btn = document.getElementById('soundToggle');
+        if (icon && btn) {
+            if (this.enabled) {
+                icon.className = 'fas fa-volume-up';
+                btn.classList.remove('muted');
+                btn.title = 'ปิดเสียง';
+            } else {
+                icon.className = 'fas fa-volume-mute';
+                btn.classList.add('muted');
+                btn.title = 'เปิดเสียง';
+            }
+        }
+    }
+};
 
 function calculatorApp() {
     return {
@@ -9,21 +152,21 @@ function calculatorApp() {
         currentSection: 'calculator',
         selectedCharges: [],
         moneyRedAmount: '',
-        useBail: false, // User's bail selection
+        useBail: false,
         notifications: [],
 
         finesData: {
             illegal_items: [
-                { name: 'ปูน', fine: 2000, jail: 10, type: 'normal', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488139333075468388/cement.png?ex=69cbb141&is=69ca5fc1&hm=a8dcdc687cc18cb1fff6f75adfd6bc15dada8d165d3658ebcedb75f0816d48ee&=&format=webp&quality=lossless' },
-                { name: 'แคปซูล (Capsule A)', fine: 3000, jail: 10, type: 'normal', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488139294374760619/capsule_a.png?ex=69cbb138&is=69ca5fb8&hm=bd753327700d7ae56365f98440a46eec244a50557f725de2300801ad4bf40cc4&=&format=webp&quality=lossless' },
-                { name: 'แคปซูล (Capsule B)', fine: 3000, jail: 10, type: 'normal', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488139313098129528/capsule_b.png?ex=69cbb13c&is=69ca5fbc&hm=49498534c2197389baf62354f27f89acd063cf34972eda2f82baa6ea40de34de&=&format=webp&quality=lossless' },
-                { name: 'แคปซูลตัวร้าย', fine: 5000, jail: 10, type: 'normal', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488139473798824097/capsule_nightmare.png?ex=69cbb162&is=69ca5fe2&hm=f42538824cb03fb6a84db61c545535591a957ce83d2023feebab13e025593b8c&=&format=webp&quality=lossless' },
-                { name: 'เงินผิดกฎหมาย (เงินแดง)', fine: 0, jail: 15, type: 'normal', multiplier: 'money', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488139361508917289/black_money.png?ex=69cbb148&is=69ca5fc8&hm=f0d53910964e267bc19e4e92f350e94678c8339c33cf3535f7d8860be8e80026&=&format=webp&quality=lossless' }
+                { name: 'ปูน', fine: 2000, jail: 10, type: 'normal', image: 'assets/images/cement.png' },
+                { name: 'แคปซูล (Capsule A)', fine: 3000, jail: 10, type: 'normal', image: 'assets/images/capsule-a.png' },
+                { name: 'แคปซูล (Capsule B)', fine: 3000, jail: 10, type: 'normal', image: 'assets/images/capsule-b.png' },
+                { name: 'ตัวยาฝันร้าย', fine: 5000, jail: 10, type: 'normal', image: 'assets/images/capsule-nightmare.png' },
+                { name: 'เงินผิดกฎหมาย (เงินแดง)', fine: 0, jail: 15, type: 'normal', multiplier: 'money', image: 'assets/images/black-money.png' }
             ],
             general: [
                 { name: 'พื้นที่สุ่มเสี่ยง', fine: 2000, jail: 10, type: 'normal' },
                 { name: 'หลบหนี', fine: 2000, jail: 10, type: 'normal' },
-                { name: 'ใส่หน้ากากปิดบังหน้าตา', fine: 5000, jail: 0, type: 'normal', image: 'https://media.discordapp.net/attachments/1485527756782571530/1488142691547090994/player_mask.png?ex=69cbb462&is=69ca62e2&hm=3e934bf4bcece606971097319ee1bfe629ca929362fb8808c67bc63a0e985783&=&format=webp&quality=lossless' },
+                { name: 'ใส่หน้ากากปิดบังหน้าตา', fine: 5000, jail: 0, type: 'normal', image: 'assets/images/mask.png' },
                 { name: 'ทะเลาะวิวาท', fine: 20000, jail: 15, type: 'normal' },
                 { name: 'หลบหนีขึ้นเขาและลงน้ำ', fine: 0, jail: 10, type: 'normal', multiplier: 'x3' },
                 { name: 'หลบหนีออกนอกเมือง', fine: 5000, jail: 10, type: 'normal' },
@@ -70,64 +213,66 @@ function calculatorApp() {
         init() {
             this.setupNavigation();
             this.calculateTotal();
-            this.setupBottomNav();
+            this.setupSoundEffects();
         },
-
-        setupBottomNav() {
-            window.addEventListener('hashchange', () => {
-                this.updateBottomNavActive();
+        
+        // Setup sound effects for various interactions
+        setupSoundEffects() {
+            // Charge selection sound
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.charge-item')) {
+                    SoundFX.play('toggle');
+                }
             });
             
-            setTimeout(() => {
-                this.updateBottomNavActive();
-            }, 100);
-        },
-
-        updateBottomNavActive() {
-            const hash = window.location.hash.slice(1) || 'calculator';
+            // Money input typing sound (debounced)
+            let typingTimeout;
+            document.addEventListener('input', (e) => {
+                if (e.target.classList.contains('money-input')) {
+                    clearTimeout(typingTimeout);
+                    typingTimeout = setTimeout(() => {
+                        SoundFX.play('typing');
+                    }, 300);
+                }
+            });
             
-            document.querySelectorAll('.bottom-nav-item').forEach(item => {
-                item.classList.remove('active');
-                const href = item.getAttribute('href');
-                if (href === `#${hash}`) {
-                    item.classList.add('active');
+            // Quantity input sound
+            document.addEventListener('input', (e) => {
+                if (e.target.classList.contains('quantity-input')) {
+                    SoundFX.play('typing');
                 }
             });
         },
 
         // Quick Preset Functions
         applyQuickPreset(type, withBail = true) {
+            SoundFX.play('button_click');
+            
             this.selectedCharges = [];
             this.moneyRedAmount = '';
             this.useBail = withBail;
 
             if (type === 'poon') {
-                // ปูน + หลบหนี
                 const poon = this.finesData.illegal_items.find(c => c.name === 'ปูน');
                 const escape = this.finesData.general.find(c => c.name === 'หลบหนี');
                 if (poon) this.selectedCharges.push({ ...poon, type: 'illegal_items', quantity: 1 });
                 if (escape) this.selectedCharges.push({ ...escape, type: 'general', quantity: 1 });
             } else if (type === 'capab') {
-                // แคป A หรือ B (สุ่ม) + หลบหนี
                 const escape = this.finesData.general.find(c => c.name === 'หลบหนี');
-                // สุ่มเลือก A หรือ B
                 const randomCap = Math.random() < 0.5 ? 'แคปซูล (Capsule A)' : 'แคปซูล (Capsule B)';
                 const cap = this.finesData.illegal_items.find(c => c.name === randomCap);
                 if (cap) this.selectedCharges.push({ ...cap, type: 'illegal_items', quantity: 1 });
                 if (escape) this.selectedCharges.push({ ...escape, type: 'general', quantity: 1 });
             } else if (type === 'capghost') {
-                // แคปซูลตัวร้าย + หลบหนี
-                const ghost = this.finesData.illegal_items.find(c => c.name === 'แคปซูลตัวร้าย');
+                const ghost = this.finesData.illegal_items.find(c => c.name === 'ตัวยาฝันร้าย');
                 const escape = this.finesData.general.find(c => c.name === 'หลบหนี');
                 if (ghost) this.selectedCharges.push({ ...ghost, type: 'illegal_items', quantity: 1 });
                 if (escape) this.selectedCharges.push({ ...escape, type: 'general', quantity: 1 });
             } else if (type === 'money') {
-                // เงินแดง + หลบหนี
                 const moneyRed = this.finesData.illegal_items.find(c => c.name === 'เงินผิดกฎหมาย (เงินแดง)');
                 const escape = this.finesData.general.find(c => c.name === 'หลบหนี');
                 if (moneyRed) this.selectedCharges.push({ ...moneyRed, type: 'illegal_items', quantity: 1 });
                 if (escape) this.selectedCharges.push({ ...escape, type: 'general', quantity: 1 });
-                // Focus on money input
                 setTimeout(() => {
                     const moneyInput = document.querySelector('.money-input');
                     if (moneyInput) moneyInput.focus();
@@ -142,17 +287,26 @@ function calculatorApp() {
                 const hash = window.location.hash.slice(1) || 'calculator';
                 const validSections = ['calculator', 'rules', 'fines-table', 'arrest'];
                 this.currentSection = validSections.includes(hash) ? hash : 'calculator';
-
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${this.currentSection}`) {
-                        link.classList.add('active');
-                    }
-                });
             };
 
             handleHashChange();
             window.addEventListener('hashchange', handleHashChange);
+        },
+
+        updateNavActive() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const targetHash = href ? href.slice(1) : '';
+                link.classList.toggle('active', targetHash === this.currentSection);
+            });
+
+            const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+            bottomNavItems.forEach(item => {
+                const href = item.getAttribute('href');
+                const targetHash = href ? href.slice(1) : '';
+                item.classList.toggle('active', targetHash === this.currentSection);
+            });
         },
 
         toggleCharge(charge, type) {
@@ -185,8 +339,6 @@ function calculatorApp() {
             let totalFine = 0;
             let totalJail = 0;
             let hasRedCase = false;
-            let normalJail = 0;
-            let redJail = 0;
 
             this.selectedCharges.forEach(charge => {
                 const quantity = charge.quantity || 1;
@@ -207,9 +359,6 @@ function calculatorApp() {
 
                 if (charge.type === 'red_cases') {
                     hasRedCase = true;
-                    redJail += chargeJail;
-                } else {
-                    normalJail += chargeJail;
                 }
             });
 
@@ -217,7 +366,6 @@ function calculatorApp() {
             if (hasX2) {
                 totalFine *= 2;
                 totalJail *= 2;
-                normalJail *= 2;
             }
 
             const hasX3 = this.selectedCharges.some(c => c.multiplier === 'x3');
@@ -225,29 +373,24 @@ function calculatorApp() {
                 totalFine *= 3;
             }
 
-            // Reset useBail to false if there's a red case
             if (hasRedCase) {
                 this.useBail = false;
             }
 
             const bailRate = 300;
 
-            // No Bail - ติดคุกเต็มจำนวน
             this.results.bailOptions.noBail = {
                 time: totalJail,
                 fine: totalFine
             };
 
-            // Bail - ประกัน ขั้นต่ำ 5 นาที (300฿/นาที)
             let bailTime, bailFine;
-
             if (totalJail <= 5) {
                 bailTime = totalJail;
                 bailFine = totalFine;
             } else {
-                const bailCost = (totalJail - 5) * bailRate;
                 bailTime = 5;
-                bailFine = totalFine + bailCost;
+                bailFine = totalFine + (totalJail - 5) * bailRate;
             }
 
             this.results.bailOptions.bail = {
@@ -265,6 +408,8 @@ function calculatorApp() {
         },
 
         resetForm() {
+            SoundFX.play('close_ui');
+            
             this.selectedCharges = [];
             this.moneyRedAmount = '';
             this.useBail = false;
@@ -274,6 +419,7 @@ function calculatorApp() {
         copyResult() {
             if (this.selectedCharges.length === 0 && !this.moneyRedAmount) {
                 this.showNotification('กรุณาเลือกข้อหา', 'error');
+                SoundFX.play('close_ui');
                 return;
             }
 
@@ -287,29 +433,26 @@ function calculatorApp() {
 
             const moneyText = this.moneyRedAmount ? `, เงินแดง ${this.moneyRedAmount}` : '';
             const allCharges = `${charges}${moneyText}`;
-
-            // Check if red case exists
             const hasRedCase = this.selectedCharges.some(c => c.type === 'red_cases');
-
-            // Use user's bail selection (but not if red case)
             const canBail = !hasRedCase && this.useBail;
             const bailText = canBail ? 'ประกัน' : 'ไม่ประกัน';
 
-            const jailTime = canBail
-                ? this.results.bailOptions.bail.time
-                : this.results.totalJail;
-
-            const fineAmount = canBail
-                ? this.results.bailOptions.bail.fine
-                : this.results.totalFine;
-
+            const fineAmount = canBail ? this.results.bailOptions.bail.fine : this.results.totalFine;
             const text = `⚖️ คดี: ${allCharges}, ${bailText}\n💰 ค่าปรับ: ${this.formatNumber(fineAmount)} ฿\n🆘 ช่วยเหลือ : @`;
 
             navigator.clipboard.writeText(text).then(() => {
                 this.showNotification('คัดลอกผลลัพธ์แล้ว!', 'success');
+                SoundFX.play('beep1');
             }).catch(() => {
                 this.showNotification('ไม่สามารถคัดลอกได้', 'error');
+                SoundFX.play('close_ui');
             });
+        },
+        
+        // Toggle bail option with sound
+        toggleBail(option) {
+            SoundFX.play('switch');
+            this.useBail = option;
         },
 
         showNotification(message, type = 'info') {
@@ -326,6 +469,20 @@ function calculatorApp() {
     };
 }
 
+// Export app instance for navigation handler
+window.calculatorAppInstance = null;
+
+// Initialize Alpine.js app and store instance
+document.addEventListener('alpine:init', () => {
+    // Store reference to the app instance
+    setTimeout(() => {
+        const app = document.querySelector('[x-data="calculatorApp()"]');
+        if (app && app._x_dataStack) {
+            window.calculatorAppInstance = app._x_dataStack[0];
+        }
+    }, 100);
+});
+
 // Header scroll effect
 document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('.header');
@@ -334,6 +491,16 @@ document.addEventListener('DOMContentLoaded', () => {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
+        }
+    });
+
+    // Initialize sound toggle button
+    SoundFX.init();
+
+    // Add sound to bail option buttons
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.bail-btn') || e.target.closest('[x-show*="useBail"]')) {
+            SoundFX.play('switch');
         }
     });
 });
