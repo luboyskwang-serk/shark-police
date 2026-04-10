@@ -1,8 +1,8 @@
-# 🦈 Shark Police v.0.0.3
+# 🦈 Shark Police v.0.0.4
 
 ระบบคำนวณค่าปรับตำรวจ - Police Fine Calculation System for Roleplay Community
 
-![Version](https://img.shields.io/badge/version-0.0.3-blue.svg)
+![Version](https://img.shields.io/badge/version-0.0.4-blue.svg)
 ![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red.svg)
 
 ## 📋 เกี่ยวกับโปรเจค
@@ -183,18 +183,18 @@ http://localhost:8000
 
 1. แก้ไขเวอร์ชันที่ `index.html`:
    ```html
-   <title>Shark Police v.0.0.3 - ระบบคำนวณค่าปรับ</title>
+   <title>Shark Police v.0.0.4 - ระบบคำนวณค่าปรับ</title>
    ```
 
 2. แก้ไข badge ที่ `README.md`:
    ```markdown
-   ![Version](https://img.shields.io/badge/version-0.0.3-blue.svg)
+   ![Version](https://img.shields.io/badge/version-0.0.4-blue.svg)
    ```
 
 3. Commit และ Push:
    ```bash
    git add .
-   git commit -m "Update to v0.0.2"
+   git commit -m "Update to v0.0.4"
    git push
    ```
 

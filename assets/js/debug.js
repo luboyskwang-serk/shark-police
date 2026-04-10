@@ -15,7 +15,7 @@
 
     // Check CSS
     console.log('\n📄 CSS FILES LOADED:');
-    document.styleSheets.forEach((sheet, index) => {
+    Array.from(document.styleSheets).forEach((sheet, index) => {
         try {
             const rules = sheet.cssRules || sheet.rules;
             console.log(`  [${index + 1}] ✓ ${sheet.href || 'Inline'}`);
@@ -34,13 +34,21 @@
         console.log(`  [${index + 1}] ${status} - ${src}`);
     });
 
-    // Check Alpine.js
+    // Check Alpine.js (delayed check - waits for DOM ready)
     console.log('\n🔧 ALPINE.JS STATUS:');
     if (window.Alpine) {
         console.log('  [✓] Alpine.js is loaded');
         console.log('  Version:', Alpine.version || 'Unknown');
     } else {
-        console.log('  [❌] Alpine.js NOT FOUND!');
+        // Wait a bit for Alpine to load
+        setTimeout(() => {
+            if (window.Alpine) {
+                console.log('  [✓] Alpine.js is loaded (delayed)');
+                console.log('  Version:', Alpine.version || 'Unknown');
+            } else {
+                console.log('  [❌] Alpine.js NOT FOUND!');
+            }
+        }, 500);
     }
 
     // Check TailwindCSS
@@ -59,14 +67,14 @@
         console.log('  [❌] SweetAlert2 NOT FOUND!');
     }
 
-    // Check SoundFX
+    // Check SoundFX (delayed check - waits for app to load sounds)
     console.log('\n🔊 SOUND SYSTEM STATUS:');
     if (window.SoundFX) {
         console.log('  [✓] SoundFX system loaded');
         console.log('  Enabled:', SoundFX.enabled);
         console.log('  Sounds loaded:', Object.keys(SoundFX.sounds || {}).length);
         console.log('  Initialized:', SoundFX.initialized);
-        
+
         if (SoundFX.sounds) {
             Object.keys(SoundFX.sounds).forEach(soundName => {
                 const sound = SoundFX.sounds[soundName];
@@ -78,17 +86,35 @@
             });
         }
     } else {
-        console.log('  [❌] SoundFX NOT FOUND!');
+        // Wait for SoundFX to load
+        setTimeout(() => {
+            if (window.SoundFX) {
+                console.log('  [✓] SoundFX system loaded (delayed)');
+                console.log('  Enabled:', SoundFX.enabled);
+                console.log('  Sounds loaded:', Object.keys(SoundFX.sounds || {}).length);
+            } else {
+                console.log('  [❌] SoundFX NOT FOUND!');
+            }
+        }, 800);
     }
 
-    // Check Calculator App
+    // Check Calculator App (delayed check - waits for Alpine to initialize)
     console.log('\n🧮 CALCULATOR APP STATUS:');
     if (window.calculatorAppInstance) {
         console.log('  [✓] Calculator app is initialized');
         console.log('  Current Section:', window.calculatorAppInstance.currentSection);
         console.log('  Selected Charges:', window.calculatorAppInstance.selectedCharges?.length || 0);
     } else {
-        console.log('  [⚠] Calculator app not found in global scope');
+        // Wait for Alpine to initialize the app
+        setTimeout(() => {
+            if (window.calculatorAppInstance) {
+                console.log('  [✓] Calculator app is initialized (delayed)');
+                console.log('  Current Section:', window.calculatorAppInstance.currentSection);
+                console.log('  Selected Charges:', window.calculatorAppInstance.selectedCharges?.length || 0);
+            } else {
+                console.log('  [⚠] Calculator app not found in global scope');
+            }
+        }, 1000);
     }
 
     // Check Performance

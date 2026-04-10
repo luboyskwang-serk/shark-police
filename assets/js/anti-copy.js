@@ -142,12 +142,9 @@
             // Check window dimensions (non-intrusive)
             const widthThreshold = window.outerWidth - window.innerWidth > 200;
             const heightThreshold = window.outerHeight - window.innerHeight > 200;
-            
+
             if (widthThreshold || heightThreshold) {
-                if (!devtoolsDetected) {
-                    devtoolsDetected = true;
-                    console.warn('⚠️ DevTools detected!');
-                }
+                devtoolsDetected = true;
             } else {
                 devtoolsDetected = false;
             }

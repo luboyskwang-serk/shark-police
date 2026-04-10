@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#020617">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="author" content="Kaneji Nightfall">
     <meta name="copyright" content="Shark Police - All Rights Reserved">
@@ -14,12 +15,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
+    <meta name="performance-budget" content="3000">
+    <meta name="color-scheme" content="dark">
+    <meta name="render-mode" content="gpu">
+    <meta http-equiv="Cache-Control" content="max-age=31536000, public, immutable">
+    <meta http-equiv="Expires" content="Thu, 31 Dec 2099 20:00:00 GMT">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    
-    <title>Shark Police v.0.0.3 - ระบบคำนวณค่าปรับ</title>
+    <link rel="preload" href="./assets/css/style.css?v=0.1.2" as="style">
+
+    <title>Shark Police v.0.0.4 - ระบบคำนวณค่าปรับ</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,50 +85,67 @@
     </script>
 
     <!-- Custom CSS - Load AFTER Tailwind to override -->
-    <link rel="stylesheet" href="./assets/css/style.css?v=0.0.3">
-    <link rel="stylesheet" href="assets/css/style.css?v=0.0.3">
+    <link rel="stylesheet" href="./assets/css/style.css?v=0.1.4">
+    <link rel="stylesheet" href="./assets/css/ultra-performance.css?v=0.1.2">
     
+    <!-- Preconnect for faster loading -->
+    <link rel="preconnect" href="./assets" crossorigin>
+
     <style>
-        [x-cloak] { display: none !important; }
+        /* Critical CSS - Load First - Ultra Performance Mode */
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{font-family:'Sarabun',sans-serif!important;background:#020617!important;color:#e2e8f0!important;line-height:1.6;min-height:100vh;overflow-x:hidden}
+        .video-background{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background:#020617;overflow:hidden}
+        .video-background video{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;transform:translate(-50%,-50%);object-fit:cover;opacity:0.15}
+        .video-background::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 50%,rgba(14,165,233,0.05) 0%,transparent 70%);z-index:1}
+        [x-cloak]{display:none!important}
+        @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+        .charge-item,.btn,.card,.logo-image{transform:translateZ(0);backface-visibility:hidden}
+        .header{transform:translateZ(0)}
 
-        /* ===== Logo Animations ===== */
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-5px) rotate(-3deg); }
-        }
-
-        @keyframes logoPulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 0.8; }
-        }
-
-        @keyframes logoRing {
-            0% { transform: rotate(0deg); border-color: rgba(14, 165, 233, 0.3); }
-            50% { border-color: rgba(14, 165, 233, 0.5); }
-            100% { transform: rotate(360deg); border-color: rgba(14, 165, 233, 0.3); }
-        }
-
-        @keyframes logoShimmer {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-
-        @keyframes logoGlowMove {
-            0%, 100% { opacity: 0.3; transform: translateX(-50%); }
-            50% { opacity: 0.8; transform: translateX(50%); }
-        }
-
-        .logo-wrapper { position: relative; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; z-index: 10; }
-        .logo-icon-container { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-        .logo-image { width: 45px; height: 45px; object-fit: contain; position: relative; z-index: 2; filter: drop-shadow(0 4px 12px rgba(14, 165, 233, 0.4)); animation: logoFloat 3s ease-in-out infinite !important; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .logo:hover .logo-image { transform: scale(1.15) rotate(5deg) !important; filter: drop-shadow(0 8px 20px rgba(14, 165, 233, 0.6)); }
-        .logo-glow { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(14, 165, 233, 0.3) 0%, transparent 70%); border-radius: 50%; animation: logoPulse 2s ease-in-out infinite !important; z-index: 0; pointer-events: none; }
-        .logo-ring { position: absolute; width: 100%; height: 100%; border: 2px solid rgba(14, 165, 233, 0.3); border-radius: 50%; animation: logoRing 3s linear infinite !important; z-index: 1; pointer-events: none; }
-        .logo-ring::before { content: ''; position: absolute; top: -2px; left: 50%; width: 6px; height: 6px; background: #0ea5e9; border-radius: 50%; box-shadow: 0 0 10px #0ea5e9; }
-        .logo-title-text { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #0ea5e9 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: logoShimmer 3s linear infinite !important; letter-spacing: -0.5px; display: block; }
-        .logo-title-glow { position: absolute; bottom: -4px; left: 0; width: 100%; height: 8px; background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.3), transparent); border-radius: 4px; animation: logoGlowMove 2s ease-in-out infinite !important; pointer-events: none; }
-        .logo-version { font-size: 0.7rem; font-weight: 600; color: #64748b; background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(99, 102, 241, 0.2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 0.5px; display: inline-block; }
-        .logo { display: flex; align-items: center; gap: 1rem; text-decoration: none !important; }
+        /* ===== Logo - Ultra Modern & Smooth ===== */
+        .logo-wrapper{position:relative;width:60px;height:60px;display:flex;align-items:center;justify-content:center;z-index:10}
+        .logo-icon-container{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;z-index:5}
+        .logo-image{width:50px;height:50px;object-fit:contain;position:relative;z-index:10;filter:drop-shadow(0 0 20px rgba(14,165,233,0.6));transition:all 0.5s cubic-bezier(0.4,0,0.2,1)}
+        .logo:hover .logo-image{transform:scale(1.15) rotate(-5deg);filter:drop-shadow(0 0 30px rgba(14,165,233,0.9)) brightness(1.1)}
+        
+        /* Glow Effects */
+        .logo-glow{position:absolute;width:100%;height:100%;background:radial-gradient(circle,rgba(14,165,233,0.3) 0%,transparent 70%);border-radius:50%;z-index:1;pointer-events:none;animation:logoGlow 3s ease-in-out infinite}
+        .logo-glow-pulse{animation:logoGlowPulse 2s ease-in-out infinite;z-index:2}
+        
+        @keyframes logoGlow{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:0.8;transform:scale(1.1)}}
+        @keyframes logoGlowPulse{0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:0.6;transform:scale(1.2)}}
+        
+        /* Animated Rings */
+        .logo-ring{position:absolute;border-radius:50%;z-index:3;pointer-events:none}
+        .logo-ring-1{width:100%;height:100%;border:2px solid rgba(14,165,233,0.3);animation:ringRotate 8s linear infinite}
+        .logo-ring-2{width:120%;height:120%;border:1px solid rgba(99,102,241,0.2);animation:ringRotate 12s linear infinite reverse}
+        .logo-ring-3{width:140%;height:140%;border:1px dashed rgba(14,165,233,0.15);animation:ringRotate 16s linear infinite}
+        
+        @keyframes ringRotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        
+        .logo-ring-1::before,.logo-ring-2::before,.logo-ring-3::before{content:'';position:absolute;top:-2px;left:50%;width:4px;height:4px;background:#0ea5e9;border-radius:50%;box-shadow:0 0 10px #0ea5e9,0 0 20px rgba(14,165,233,0.5)}
+        .logo-ring-2::before{background:#6366f1;box-shadow:0 0 10px #6366f1,0 0 20px rgba(99,102,241,0.5)}
+        .logo-ring-3::before{width:3px;height:3px;opacity:0.5}
+        
+        /* Logo Text */
+        .logo-title-text{font-size:1.6rem;font-weight:800;letter-spacing:-0.5px;display:block;position:relative}
+        .title-gradient{background:linear-gradient(135deg,#0ea5e9 0%,#6366f1 30%,#0ea5e9 50%,#6366f1 70%,#0ea5e9 100%);background-size:300% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:titleShimmer 4s linear infinite;display:inline-block}
+        @keyframes titleShimmer{0%{background-position:0% center}100%{background-position:300% center}}
+        
+        .logo-title-glow{position:absolute;bottom:-4px;left:0;width:100%;height:8px;background:linear-gradient(90deg,transparent,rgba(14,165,233,0.2),transparent);border-radius:4px;pointer-events:none}
+        
+        .logo-version{font-size:0.7rem;font-weight:600;color:#64748b;background:linear-gradient(135deg,rgba(14,165,233,0.2),rgba(99,102,241,0.2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.5px;display:inline-block}
+        
+        /* Status Badge */
+        .logo-status-badge{display:inline-flex;align-items:center;gap:0.375rem;margin-top:0.25rem;padding:0.25rem 0.625rem;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:12px;font-size:0.65rem}
+        .status-dot{width:6px;height:6px;background:#10b981;border-radius:50%;animation:statusPulse 2s ease-in-out infinite;box-shadow:0 0 8px rgba(16,185,129,0.6)}
+        @keyframes statusPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.2)}}
+        .status-text{color:#10b981;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+        
+        .logo{display:flex;align-items:center;gap:1rem;text-decoration:none!important;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);padding:0.5rem;border-radius:12px}
+        .logo:hover{transform:translateY(-2px);background:rgba(14,165,233,0.05)}
 
         /* ===== Modern Creator Badge ===== */
         .creator-section {
@@ -165,28 +189,6 @@
 
         .creator-badge-modern:hover::before {
             opacity: 1;
-        }
-
-        .creator-badge-bg {
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%);
-            animation: creatorPulse 4s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes creatorPulse {
-            0%, 100% {
-                transform: scale(1) rotate(0deg);
-                opacity: 0.5;
-            }
-            50% {
-                transform: scale(1.1) rotate(5deg);
-                opacity: 0.8;
-            }
         }
 
         .creator-badge-content {
@@ -238,31 +240,10 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: creatorShimmer 3s linear infinite;
-        }
-
-        @keyframes creatorShimmer {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-
-        .creator-badge-shine {
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.6s ease;
-            pointer-events: none;
-        }
-
-        .creator-badge-modern:hover .creator-badge-shine {
-            left: 100%;
         }
 
         .main-content {
-            padding-top: 100px;
+            padding-top: 88px;
             min-height: 100vh;
         }
 
@@ -270,6 +251,7 @@
             display: grid;
             grid-template-columns: 1fr 400px;
             gap: 2rem;
+            padding-top: 1rem;
         }
 
         /* Mobile-First Calculator Layout */
@@ -278,13 +260,15 @@
                 grid-template-columns: 1fr;
                 gap: 1rem;
                 padding-bottom: 100px;
+                padding-top: 1rem;
             }
 
             .charges-section {
                 order: 1;
                 border-radius: 0;
                 border: none;
-                border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+                border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+                padding: 0.875rem 1rem;
             }
 
             .result-panel {
@@ -304,12 +288,13 @@
             }
         }
 
+        /* ===== Charges Panel - Premium Compact ===== */
         .charges-section {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 1.5rem;
-            border: 1px solid rgba(14, 165, 233, 0.1);
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            border-radius: 14px;
+            padding: 1rem 1.125rem;
+            backdrop-filter: blur(8px);
         }
 
         /* Mobile Quick Presets */
@@ -398,54 +383,146 @@
             padding-bottom: 0;
         }
         
+        /* ===== Category Headers - Premium Compact ===== */
+        .category-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+        }
+
+        .category-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
         .category-header {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 0.75rem;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: rgba(14, 165, 233, 0.1);
-            border-radius: 12px;
-            border-left: 4px solid #0ea5e9;
+            margin-bottom: 1.25rem;
+            padding: 0.625rem 1rem 0.625rem 0.875rem;
+            background: rgba(14, 165, 233, 0.06);
+            border: 1px solid rgba(14, 165, 233, 0.12);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        .category-header.red {
-            background: rgba(239, 68, 68, 0.1);
-            border-left-color: #ef4444;
+
+        .category-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, 
+                rgba(14, 165, 233, 0.08), 
+                transparent);
+            opacity: 0;
+            transition: opacity 0.25s ease;
         }
-        
+
+        .category-header:hover::after {
+            opacity: 1;
+        }
+
+        .category-header:hover {
+            border-color: rgba(14, 165, 233, 0.2);
+            box-shadow: 0 2px 12px rgba(14, 165, 233, 0.08);
+        }
+
+        .category-header > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-header i {
+            font-size: 1.1rem;
+            color: #0ea5e9;
+            transition: all 0.25s ease;
+        }
+
+        .category-header:hover i {
+            transform: scale(1.1);
+        }
+
         .category-title {
-            color: #fff;
-            font-size: 1.25rem;
+            color: #f1f5f9;
+            font-size: 0.95rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+        }
+
+        /* Red Case Header */
+        .category-header.red {
+            background: rgba(239, 68, 68, 0.06);
+            border-color: rgba(239, 68, 68, 0.15);
+        }
+
+        .category-header.red::after {
+            background: linear-gradient(135deg, 
+                rgba(239, 68, 68, 0.08), 
+                transparent);
+        }
+
+        .category-header.red:hover {
+            border-color: rgba(239, 68, 68, 0.25);
+            box-shadow: 0 2px 12px rgba(239, 68, 68, 0.1);
+        }
+
+        .category-header.red i {
+            color: #ef4444;
+        }
+
+        .red-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.125rem 0.5rem;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 6px;
+            color: #f87171;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .category-header:not(.red) i {
+            filter: drop-shadow(0 0 6px rgba(14, 165, 233, 0.3));
+        }
+
+        .category-header.red i {
+            filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.3));
         }
         
         .charges-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 0.5rem;
         }
 
         /* Mobile Charges Grid - 2 Columns */
         @media (max-width: 640px) {
             .charges-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
+                gap: 0.375rem;
             }
 
             .charge-item {
-                padding: 0.625rem;
+                padding: 0.625rem 0.75rem;
+                gap: 0.5rem;
             }
 
             .charge-name {
-                font-size: 0.75rem;
+                font-size: 0.775rem;
             }
 
             .charge-details {
-                font-size: 0.65rem;
+                font-size: 0.675rem;
+                gap: 0.5rem;
             }
 
             .charge-checkbox {
@@ -455,7 +532,12 @@
             }
 
             .charge-checkbox i {
-                font-size: 0.65rem;
+                font-size: 0.6rem;
+            }
+
+            .charge-image {
+                width: 32px;
+                height: 32px;
             }
         }
 
@@ -465,55 +547,93 @@
                 grid-template-columns: 1fr;
             }
         }
-        
+
+        /* Charge Item - Premium Card */
         .charge-item {
             display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.875rem;
-            background: rgba(15, 23, 42, 0.6);
+            align-items: flex-start;
+            gap: 0.625rem;
+            padding: 0.75rem 0.875rem;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.06);
             border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
-            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .charge-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, 
+                rgba(14, 165, 233, 0.08), 
+                transparent);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .charge-item:hover::before {
+            opacity: 1;
         }
 
         .charge-item:hover {
-            background: rgba(14, 165, 233, 0.1);
-            transform: translateY(-2px);
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(14, 165, 233, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .charge-item.selected {
-            background: rgba(14, 165, 233, 0.15);
-            border-color: rgba(14, 165, 233, 0.3);
-        }
-        
-        .charge-item.selected .charge-checkbox {
-            background: linear-gradient(135deg, #0ea5e9, #6366f1);
-            border-color: #0ea5e9;
+            background: rgba(14, 165, 233, 0.08);
+            border-color: rgba(14, 165, 233, 0.25);
+            box-shadow: 0 2px 12px rgba(14, 165, 233, 0.08);
         }
 
+        .charge-item.selected::before {
+            background: linear-gradient(135deg, 
+                rgba(14, 165, 233, 0.12), 
+                rgba(99, 102, 241, 0.06));
+            opacity: 1;
+        }
+
+        .charge-item > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Checkbox - Compact Premium */
         .charge-checkbox {
-            width: 22px;
-            height: 22px;
-            min-width: 22px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 2px solid #475569;
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1.5px solid rgba(148, 163, 184, 0.2);
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 1px;
         }
 
         .charge-checkbox i {
             color: #fff;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             opacity: 0;
-            transform: scale(0);
-            transition: all 0.2s ease;
+            transform: scale(0.5);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .charge-item:hover .charge-checkbox {
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+
+        .charge-item.selected .charge-checkbox {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border-color: transparent;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
         }
 
         .charge-item.selected .charge-checkbox i {
@@ -521,36 +641,71 @@
             transform: scale(1);
         }
 
+        /* Charge Info */
         .charge-info {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.1875rem;
             min-width: 0;
         }
 
         .charge-name {
-            color: #cbd5e1;
+            color: #e2e8f0;
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
+            line-height: 1.3;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            transition: color 0.2s ease;
+        }
+
+        .charge-item:hover .charge-name {
+            color: #f1f5f9;
+        }
+
+        .charge-item.selected .charge-name {
+            color: #0ea5e9;
+            font-weight: 600;
         }
 
         .charge-details {
             display: flex;
-            gap: 1rem;
-            font-size: 0.8rem;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.75rem;
             flex-wrap: wrap;
         }
 
         .charge-fine {
             color: #fbbf24;
-            white-space: nowrap;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
         }
 
-        /* ===== Item Image Styles ===== */
+        .charge-fine::before {
+            content: '฿';
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .charge-jail {
+            color: #f87171;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .charge-jail::before {
+            content: '⏱';
+            font-size: 0.65rem;
+        }
+
+        /* Charge Image */
         .charge-image-wrapper {
             display: flex;
             align-items: center;
@@ -559,50 +714,89 @@
         }
 
         .charge-image {
-            width: 45px;
-            height: 45px;
+            width: 36px;
+            height: 36px;
             object-fit: contain;
             border-radius: 8px;
-            background: rgba(14, 165, 233, 0.1);
-            border: 1px solid rgba(14, 165, 233, 0.2);
-            transition: all 0.3s ease;
+            background: rgba(14, 165, 233, 0.06);
+            border: 1px solid rgba(14, 165, 233, 0.1);
+            transition: all 0.2s ease;
         }
 
         .charge-item:hover .charge-image {
-            border-color: rgba(14, 165, 233, 0.4);
-            box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+            border-color: rgba(14, 165, 233, 0.2);
+            background: rgba(14, 165, 233, 0.1);
         }
 
-        /* ===== Sound Toggle Button ===== */
+        /* Quantity Wrapper */
+        .quantity-wrapper {
+            display: none;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .charge-item.selected .quantity-wrapper {
+            display: flex;
+        }
+
+        .quantity-input {
+            width: 48px;
+            padding: 0.25rem 0.375rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            text-align: center;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.15);
+        }
+
+        /* ===== Header Actions ===== */
+        .header-actions{display:flex;align-items:center;gap:0.5rem}
+        
+        /* ===== Sound Toggle Button - Compact ===== */
         .sound-toggle-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
-            background: rgba(14, 165, 233, 0.15);
-            border: 1px solid rgba(14, 165, 233, 0.3);
-            border-radius: 10px;
+            width: 38px;
+            height: 38px;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            border-radius: 8px;
             color: #0ea5e9;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1rem;
         }
 
         .sound-toggle-btn:hover {
-            background: rgba(14, 165, 233, 0.25);
-            border-color: rgba(14, 165, 233, 0.5);
+            background: rgba(14, 165, 233, 0.18);
+            border-color: rgba(14, 165, 233, 0.35);
             transform: scale(1.05);
         }
 
+        .sound-toggle-btn:active {
+            transform: scale(0.95);
+        }
+
         .sound-toggle-btn.muted {
-            background: rgba(100, 116, 139, 0.15);
-            border-color: rgba(100, 116, 139, 0.3);
+            background: rgba(100, 116, 139, 0.1);
+            border-color: rgba(100, 116, 139, 0.2);
             color: #64748b;
         }
 
         .sound-toggle-btn.muted:hover {
-            background: rgba(100, 116, 139, 0.25);
+            background: rgba(100, 116, 139, 0.18);
+            color: #94a3b8;
         }
 
         @media (max-width: 768px) {
@@ -638,12 +832,12 @@
             align-items: center;
             gap: 0.75rem;
             background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(20px);
             border: 1px solid rgba(14, 165, 233, 0.3);
             border-radius: 16px;
             padding: 0.75rem 1rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(14, 165, 233, 0.2);
             transition: all 0.3s ease;
+            transform: translateZ(0);
         }
 
         .music-player-controls:hover {
@@ -823,91 +1017,726 @@
             box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
         }
         
+        /* ===== Result Panel - Premium Compact ===== */
         .result-panel {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid rgba(14, 165, 233, 0.2);
+            position: relative;
+            overflow: hidden;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            border-radius: 14px;
+            padding: 1rem 1.125rem;
+            backdrop-filter: blur(12px);
             position: sticky;
             top: 100px;
             height: fit-content;
         }
 
-        /* Mobile Result Panel - No Scroll */
-        @media (max-width: 768px) {
-            .result-panel {
-                position: relative;
-                top: 0;
-                padding: 1rem;
-                border-radius: 16px;
-                border: 1px solid rgba(14, 165, 233, 0.2);
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            }
-
-            .result-main {
-                padding: 1rem;
-                margin-bottom: 1rem;
-            }
-
-            .result-main-value {
-                font-size: 2rem;
-            }
-
-            .bail-options {
-                margin-top: 1rem;
-            }
-
-            .bail-option {
-                padding: 1rem;
-                margin-bottom: 0.75rem;
-            }
-
-            .action-buttons {
-                margin-top: 1rem;
-            }
-
-            .result-title {
-                font-size: 1.1rem;
-                margin-bottom: 1rem;
-            }
+        .result-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('assets/images/avatar.png') center center / cover no-repeat;
+            opacity: 0.08;
+            filter: saturate(0.3) brightness(1.2);
+            z-index: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
-        
+
+        .result-panel::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, 
+                rgba(15, 23, 42, 0.3) 0%, 
+                rgba(15, 23, 42, 0.7) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .result-panel > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Result Header */
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.875rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .result-header i {
+            color: #0ea5e9;
+            font-size: 1rem;
+        }
+
+        .result-header h2 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            letter-spacing: 0.2px;
+        }
+
+        /* Main Result - Compact */
         .result-main {
             text-align: center;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(99, 102, 241, 0.2));
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(14, 165, 233, 0.06);
+            border: 1px solid rgba(14, 165, 233, 0.12);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .result-main::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, 
+                rgba(14, 165, 233, 0.08), 
+                rgba(99, 102, 241, 0.04));
+            z-index: 0;
+        }
+
+        .result-main > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-main-label {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            margin-bottom: 0.375rem;
+            font-weight: 500;
+        }
+
         .result-main-value {
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 2rem;
+            font-weight: 800;
             background: linear-gradient(135deg, #0ea5e9, #6366f1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            line-height: 1.2;
         }
-        
+
+        .result-main-jail {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            margin-top: 0.375rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-weight: 500;
+        }
+
+        .result-main-jail i {
+            color: #fbbf24;
+            font-size: 0.75rem;
+        }
+
+        /* Bail Options */
+        .bail-section {
+            margin-bottom: 0.875rem;
+        }
+
+        .bail-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.625rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        .bail-header i {
+            color: #0ea5e9;
+            font-size: 0.875rem;
+        }
+
+        .bail-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .bail-btn {
+            padding: 0.625rem 0.75rem;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bail-btn:hover {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(148, 163, 184, 0.15);
+        }
+
+        .bail-btn.active-bail {
+            background: rgba(14, 165, 233, 0.08);
+            border-color: rgba(14, 165, 233, 0.2);
+        }
+
+        .bail-btn.active-no-bail {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.15);
+        }
+
+        .bail-btn-label {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.775rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 0.25rem;
+        }
+
+        .bail-btn-label i {
+            font-size: 0.7rem;
+        }
+
+        .bail-btn.active-bail .bail-btn-label i {
+            color: #10b981;
+        }
+
+        .bail-btn.active-no-bail .bail-btn-label i {
+            color: #ef4444;
+        }
+
+        .bail-btn-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.125rem;
+            font-size: 0.675rem;
+            color: #64748b;
+        }
+
+        .bail-btn-details span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .bail-btn-details strong {
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        /* Bail Card (Alternative) */
         .bail-card {
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-            border-left: 3px solid #475569;
-            transition: all 0.3s ease;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.06);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid rgba(148, 163, 184, 0.2);
+            transition: all 0.2s ease;
         }
-        
+
+        .bail-card:hover {
+            background: rgba(30, 41, 59, 0.5);
+            border-color: rgba(148, 163, 184, 0.1);
+        }
+
         .bail-card.recommended {
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(16, 185, 129, 0.06);
+            border-color: rgba(16, 185, 129, 0.12);
             border-left-color: #10b981;
         }
-        
+
         .bail-card.red-case {
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239, 68, 68, 0.06);
+            border-color: rgba(239, 68, 68, 0.12);
             border-left-color: #ef4444;
         }
+
+        /* Status Badge */
+        .result-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.625rem 0.75rem;
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.06);
+            border-radius: 8px;
+            margin-bottom: 0.625rem;
+            font-size: 0.775rem;
+        }
+
+        .result-status-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .result-status-value {
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .result-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.1875rem 0.625rem;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        .result-status-badge.bail {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .result-status-badge.no-bail {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        /* Summary Tags */
+        .result-summary {
+            padding: 0.625rem 0.75rem;
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.06);
+            border-radius: 8px;
+            margin-bottom: 0.625rem;
+        }
+
+        .result-summary-label {
+            color: #64748b;
+            font-size: 0.75rem;
+            margin-bottom: 0.375rem;
+            font-weight: 500;
+        }
+
+        .result-summary-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+        }
+
+        .summary-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.1875rem 0.5rem;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.15);
+            border-radius: 6px;
+            color: #7dd3fc;
+            font-size: 0.65rem;
+            font-weight: 500;
+        }
+
+        .summary-tag.money {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+
+        .summary-tag.bail-tag {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+
+        /* Suspect Description Section */
+        .suspect-section {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            border-radius: 10px;
+            padding: 0.875rem;
+        }
+
+        .suspect-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.625rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .suspect-section-header i {
+            color: #0ea5e9;
+            font-size: 0.9rem;
+        }
+
+        .suspect-field {
+            margin-bottom: 0.75rem;
+        }
+
+        .suspect-field:last-child {
+            margin-bottom: 0;
+        }
+
+        .suspect-label {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        .suspect-label i {
+            color: #0ea5e9;
+            font-size: 0.8rem;
+        }
+
+        .suspect-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+        }
+
+        .suspect-option-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 6px;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        .suspect-option-btn:hover {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(14, 165, 233, 0.2);
+            color: #e2e8f0;
+        }
+
+        .suspect-option-btn.suspect-selected {
+            background: rgba(14, 165, 233, 0.12);
+            border-color: rgba(14, 165, 233, 0.3);
+            color: #0ea5e9;
+            font-weight: 600;
+        }
+
+        .suspect-option-btn.suspect-clear {
+            color: #64748b;
+        }
+
+        .suspect-option-btn.suspect-clear.suspect-selected {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        /* Suspect Preview */
+        .suspect-preview {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .suspect-preview-text {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+        }
+
+        .suspect-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.625rem;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.15);
+            border-radius: 6px;
+            color: #7dd3fc;
+            font-size: 0.675rem;
+            font-weight: 500;
+        }
+
+        /* Copy Sections */
+        .copy-section {
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.06);
+            border-radius: 10px;
+        }
+
+        .copy-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.625rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .copy-section-header i {
+            color: #0ea5e9;
+            font-size: 0.875rem;
+        }
+
+        .btn-copy-game {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1rem;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        .btn-copy-game:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-copy-game:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-copy-game:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .btn-copy {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        .btn-copy:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-copy:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-copy:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-reset {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+            padding: 0.75rem 1rem;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 8px;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        .btn-reset:hover {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(148, 163, 184, 0.2);
+            color: #e2e8f0;
+        }
+
+        /* Mobile Result Panel */
+        @media (max-width: 768px) {
+            .result-panel {
+                position: relative;
+                top: 0;
+                padding: 0.875rem 1rem;
+                border-radius: 14px;
+            }
+
+            .result-main {
+                padding: 0.875rem;
+                margin-bottom: 0.875rem;
+            }
+
+            .result-main-value {
+                font-size: 1.75rem;
+            }
+
+            .result-main-label {
+                font-size: 0.7rem;
+            }
+
+            .bail-options {
+                grid-template-columns: 1fr;
+                gap: 0.375rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.375rem;
+            }
+
+            .btn-copy,
+            .btn-reset,
+            .btn-copy-game {
+                width: 100%;
+                min-height: 44px;
+            }
+
+            .copy-section {
+                padding: 0.625rem;
+                margin-bottom: 0.625rem;
+            }
+
+            .copy-section-header {
+                font-size: 0.7rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .suspect-section {
+                padding: 0.75rem;
+            }
+
+            .suspect-section-header {
+                font-size: 0.75rem;
+            }
+
+            .suspect-option-btn {
+                padding: 0.375rem 0.625rem;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* ===== Mobile Result Panel - Compact ===== */
+        @media (max-width: 768px) {
+            .result-panel {
+                position: relative;
+                top: 0;
+                padding: 0.875rem 1rem;
+                border-radius: 14px;
+            }
+
+            .result-header {
+                padding-bottom: 0.625rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .result-header h2 {
+                font-size: 0.875rem;
+            }
+
+            .result-main {
+                padding: 0.875rem;
+                margin-bottom: 0.875rem;
+            }
+
+            .result-main-value {
+                font-size: 1.75rem;
+            }
+
+            .result-main-label {
+                font-size: 0.7rem;
+            }
+
+            .result-main-jail {
+                font-size: 0.75rem;
+            }
+
+            .bail-section {
+                margin-bottom: 0.75rem;
+            }
+
+            .bail-options {
+                grid-template-columns: 1fr;
+                gap: 0.375rem;
+            }
+
+            .bail-btn {
+                padding: 0.625rem;
+            }
+
+            .result-status {
+                padding: 0.5rem 0.625rem;
+                font-size: 0.7rem;
+            }
+
+            .result-summary {
+                padding: 0.5rem 0.625rem;
+            }
+
+            .summary-tag {
+                font-size: 0.6rem;
+                padding: 0.125rem 0.375rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.375rem;
+                margin-top: 0.625rem;
+            }
+
+            .btn-copy,
+            .btn-reset {
+                width: 100%;
+                min-height: 44px;
+                padding: 0.75rem;
+            }
+
+            .btn-copy {
+                font-size: 0.85rem;
+            }
+
+            .bail-card {
+                padding: 0.625rem;
+                margin-bottom: 0.375rem;
+            }
+        }
         
+        /* Legacy - kept for backward compatibility */
         .bail-option-header {
             display: flex;
             align-items: center;
@@ -1019,20 +1848,39 @@
         /* Small Mobile (320px - 375px) */
         @media (max-width: 375px) {
             .header-content {
-                padding: 0.75rem 1rem;
+                padding: 0.625rem 0.75rem;
+                gap: 0.75rem;
             }
 
-            .logo-icon {
+            .logo-wrapper {
                 width: 40px;
                 height: 40px;
             }
 
+            .logo-image {
+                width: 35px;
+                height: 35px;
+            }
+
             .logo-text h1 {
-                font-size: 1.1rem;
+                font-size: 1rem;
+            }
+
+            .logo-version {
+                font-size: 0.6rem;
+            }
+
+            .logo-status-badge {
+                display: none;
+            }
+
+            .nav {
+                padding: 0.25rem;
+                gap: 0.25rem;
             }
 
             .nav-link {
-                padding: 0.4rem 0.6rem;
+                padding: 0.5rem 0.625rem;
                 font-size: 0.75rem;
             }
 
@@ -1042,44 +1890,51 @@
 
             .nav-link i {
                 font-size: 1rem;
+                margin: 0;
+            }
+
+            .sound-toggle-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
             }
 
             .main-content {
-                padding-top: 70px;
+                padding-top: 72px;
             }
 
             .calculator-layout {
                 grid-template-columns: 1fr;
                 gap: 1rem;
+                padding-top: 0.5rem;
             }
 
             .charges-section {
-                padding: 1rem;
-            }
-
-            .category-header {
-                padding: 0.75rem;
-            }
-
-            .category-title {
-                font-size: 1rem;
+                padding: 0.875rem;
             }
 
             .charges-grid {
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.375rem;
             }
 
             .charge-item {
-                padding: 0.75rem;
+                padding: 0.625rem 0.75rem;
+                gap: 0.5rem;
             }
 
             .charge-name {
-                font-size: 0.85rem;
+                font-size: 0.775rem;
             }
 
             .charge-details {
-                font-size: 0.7rem;
+                font-size: 0.675rem;
+                gap: 0.5rem;
+            }
+
+            .charge-image {
+                width: 30px;
+                height: 30px;
             }
 
             .result-panel {
@@ -1158,19 +2013,20 @@
             .calculator-layout {
                 grid-template-columns: 1fr;
                 gap: 1.25rem;
+                padding-top: 0.5rem;
             }
 
             .charges-section {
-                padding: 1.25rem;
+                padding: 1rem;
             }
 
             .charges-grid {
                 grid-template-columns: 1fr;
-                gap: 0.625rem;
+                gap: 0.5rem;
             }
 
             .charge-item {
-                padding: 0.875rem;
+                padding: 0.75rem 0.875rem;
             }
 
             .result-panel {
@@ -1213,6 +2069,7 @@
             .calculator-layout {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
+                padding-top: 0.5rem;
             }
 
             .charges-grid {
@@ -1247,15 +2104,17 @@
             }
 
             .main-content {
-                padding-top: 85px;
+                padding-top: 72px;
             }
 
             .calculator-layout {
                 grid-template-columns: 1fr;
+                padding-top: 0.5rem;
             }
 
             .charges-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 0.375rem;
             }
 
             .result-panel {
@@ -1298,6 +2157,7 @@
         @media (min-width: 769px) and (max-width: 1024px) {
             .calculator-layout {
                 grid-template-columns: 1fr 350px;
+                padding-top: 0.5rem;
             }
 
             .charges-grid {
@@ -1376,7 +2236,7 @@
         /* Landscape orientation */
         @media (orientation: landscape) and (max-height: 500px) {
             .main-content {
-                padding-top: 60px;
+                padding-top: 90px;
             }
 
             .header {
@@ -1450,6 +2310,17 @@
             .result-panel {
                 position: static;
                 border: 1px solid #000;
+            }
+        }
+
+        /* ===== Page Sections ===== */
+        .page-section {
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-section {
+                padding-top: 0.5rem;
             }
         }
 
@@ -1550,8 +2421,9 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
-                background: rgba(15, 23, 42, 0.98);
-                backdrop-filter: blur(20px);
+                background: rgba(15, 23, 42, 0.95);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
                 border-top: 1px solid rgba(14, 165, 233, 0.2);
                 z-index: 9999;
                 padding: 0.5rem;
@@ -1559,6 +2431,8 @@
                 box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
                 pointer-events: auto;
                 -webkit-tap-highlight-color: transparent;
+                will-change: auto;
+                transform: translateZ(0);
             }
 
             .bottom-nav-item {
@@ -1694,7 +2568,7 @@
             }
 
             .main-content {
-                padding-top: 65px;
+                padding-top: 72px;
             }
 
             .container {
@@ -1859,7 +2733,7 @@
             }
 
             .main-content {
-                padding-top: 70px;
+                padding-top: 72px;
             }
 
             .grid-cols-2 {
@@ -2188,38 +3062,37 @@
     </style>
 </head>
 <body x-data="calculatorApp()" x-init="init()">
-    <!-- Video Background -->
+    <!-- Background -->
     <div class="video-background">
-        <video autoplay muted loop playsinline id="bgVideo">
+        <video autoplay muted loop playsinline preload="metadata">
             <source src="wallpaper.webm" type="video/webm">
-            Your browser does not support the video tag.
         </video>
-        <div class="video-overlay"></div>
     </div>
-    
-    <!-- Header -->
+
+    <!-- Header - Premium Compact -->
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="logo">
                 <div class="logo-wrapper">
+                    <div class="logo-ring logo-ring-1"></div>
+                    <div class="logo-ring logo-ring-2"></div>
+                    <div class="logo-glow"></div>
                     <div class="logo-icon-container">
-                        <div class="logo-glow"></div>
-                        <div class="logo-ring"></div>
                         <img src="assets/images/LOGO.png"
-                             alt="Shark Police Logo"
+                             alt="Shark Police"
                              class="logo-image">
                     </div>
                 </div>
                 <div class="logo-text">
                     <h1 class="logo-title">
-                        <span class="logo-title-text">Shark Police</span>
-                        <div class="logo-title-glow"></div>
+                        <span class="logo-title-text">
+                            <span class="title-gradient">Shark Police</span>
+                        </span>
                     </h1>
-                    <span class="logo-version">v.0.0.3</span>
+                    <span class="logo-version">v.0.0.4</span>
                 </div>
             </a>
 
-            <!-- Desktop Nav -->
             <nav class="nav">
                 <a href="#calculator" class="nav-link active">
                     <i class="fas fa-calculator"></i>
@@ -2239,7 +3112,7 @@
                 </a>
                 <a href="#announcements" class="nav-link">
                     <i class="fas fa-bullhorn"></i>
-                    <span>ข้อความประกาศ</span>
+                    <span>ประกาศ</span>
                 </a>
                 <a href="#uniforms" class="nav-link">
                     <i class="fas fa-tshirt"></i>
@@ -2247,12 +3120,11 @@
                 </a>
                 <a href="#guides" class="nav-link">
                     <i class="fas fa-clipboard-list"></i>
-                    <span>แนวทางปฏิบัติ</span>
+                    <span>แนวทาง</span>
                 </a>
             </nav>
 
-            <div class="text-right">
-                <!-- Sound Toggle Button -->
+            <div class="header-actions">
                 <button id="soundToggle" class="sound-toggle-btn" title="เปิด/ปิดเสียง">
                     <i class="fas fa-volume-up" id="soundIcon"></i>
                 </button>
@@ -2287,25 +3159,8 @@
     <!-- Main Content -->
     <main class="main-content">
         <div class="container mx-auto px-4">
-            <!-- Creator Credit - Modern Design -->
-            <div class="creator-section mb-8">
-                <div class="creator-badge-modern">
-                    <div class="creator-badge-bg"></div>
-                    <div class="creator-badge-content">
-                        <div class="creator-badge-icon">
-                            <i class="fas fa-code"></i>
-                        </div>
-                        <div class="creator-badge-text">
-                            <span class="creator-badge-label">Created by</span>
-                            <span class="creator-badge-name">Kaneji Nightfall</span>
-                        </div>
-                        <div class="creator-badge-shine"></div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Rules Section -->
-            <div id="rules" class="mb-8" x-show="currentSection === 'rules'" x-cloak>
+            <div id="rules" class="page-section mb-8" x-show="currentSection === 'rules'" x-cloak>
                 <div class="container mx-auto px-4 max-w-7xl">
                 <!-- Page Header -->
                 <div class="card mb-6 overflow-hidden">
@@ -2839,7 +3694,7 @@
             </div>
             
             <!-- Fines Table Section -->
-            <div id="fines-table" class="mb-8" x-show="currentSection === 'fines-table'" x-cloak>
+            <div id="fines-table" class="page-section mb-8" x-show="currentSection === 'fines-table'" x-cloak>
                 <div class="container mx-auto px-4 max-w-7xl">
                 <!-- Page Header -->
                 <div class="card mb-6 overflow-hidden">
@@ -3039,7 +3894,7 @@
             </div>
             
             <!-- Arrest Section -->
-            <div id="arrest" class="mb-8" x-show="currentSection === 'arrest'" x-cloak>
+            <div id="arrest" class="page-section mb-8" x-show="currentSection === 'arrest'" x-cloak>
                 <div class="container mx-auto px-4 max-w-6xl">
                 <!-- Page Header -->
                 <div class="card mb-6 overflow-hidden">
@@ -3391,6 +4246,255 @@
                         >
                     </div>
 
+                    <!-- Car Selector + Countdown Timer -->
+                    <div class="car-selector-wrapper mb-4">
+                        <!-- Toggle Header -->
+                        <button @click="carSelectorOpen = !carSelectorOpen" class="car-selector-toggle">
+                            <div class="flex items-center gap-2 flex-1">
+                                <i class="fas fa-car text-sky-400"></i>
+                                <span class="text-slate-200 font-semibold text-sm">🚗 โหมด เลือกรถ+จับเวลาหลังหลบหนี (เครื่องมือช่วยของคนนั่งข้าง)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <!-- Timer Display (always show when active) -->
+                                <div class="timer-display" x-show="timerActive || timerFinished" x-cloak>
+                                    <span class="timer-label">หนีรอด:</span>
+                                    <span class="timer-value" x-text="timerDisplay" :class="{ 'timer-warning': timerSeconds <= 30, 'timer-danger': timerSeconds <= 10 }"></span>
+                                </div>
+                                <!-- Toggle Icon -->
+                                <i class="fas fa-chevron-down car-selector-arrow" :class="{ 'arrow-rotated': carSelectorOpen }"></i>
+                            </div>
+                        </button>
+
+                        <!-- Collapsible Content -->
+                        <div class="car-selector-content" x-show="carSelectorOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+                            <!-- Car Preview with Color Filter -->
+                            <div class="car-preview-container mb-3" x-show="selectedCar">
+                                <div class="car-preview-box">
+                                    <div class="car-image-wrapper">
+                                        <img 
+                                            :src="selectedCarImage" 
+                                            :alt="selectedCar"
+                                            class="car-preview-image"
+                                            :style="carColorFilter ? 'filter: ' + carColorFilter + ';' : ''"
+                                        />
+                                    </div>
+                                    <div class="car-preview-info">
+                                        <h4 class="car-preview-name" x-text="selectedCar"></h4>
+                                        <span class="car-preview-color-badge" x-show="selectedColor" x-text="selectedColor"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Car Grid -->
+                            <div class="car-grid mb-3">
+                                <template x-for="car in carList" :key="car.name">
+                                    <button
+                                        @click="selectCar(car.name, car.image)"
+                                        class="car-item-btn"
+                                        :class="{ 'car-selected': selectedCar === car.name }"
+                                    >
+                                        <img :src="car.image" :alt="car.name" class="car-item-image" />
+                                        <span class="car-item-name" x-text="car.name"></span>
+                                    </button>
+                                </template>
+                            </div>
+
+                            <!-- Color Picker -->
+                            <div class="color-picker-section mb-3" x-show="selectedCar">
+                                <div class="text-slate-400 text-xs mb-2 flex items-center gap-2">
+                                    <i class="fas fa-palette"></i>
+                                    <span>สีรถ:</span>
+                                </div>
+                                <div class="color-picker-grid">
+                                    <template x-for="color in colorList" :key="color.name">
+                                        <button
+                                            @click="selectColor(color.name, color.filter)"
+                                            class="color-swatch-btn"
+                                            :class="{ 'color-selected': selectedColor === color.name }"
+                                            :style="'background: ' + color.hex + ';'"
+                                            :title="color.name"
+                                        >
+                                            <i class="fas fa-check" x-show="selectedColor === color.name"></i>
+                                        </button>
+                                    </template>
+                                    <button
+                                        @click="clearColor()"
+                                        class="color-swatch-btn color-clear-btn"
+                                        :class="{ 'color-selected': !selectedColor }"
+                                        title="สีเดิม"
+                                    >
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Suspect Description Section -->
+                            <div class="suspect-section mb-3">
+                                <div class="suspect-section-header">
+                                    <i class="fas fa-user-secret"></i>
+                                    <span>รูปพรรณสันฐานผู้ต้องหา</span>
+                                </div>
+                                
+                                <!-- Gender Selection -->
+                                <div class="suspect-field">
+                                    <label class="suspect-label">
+                                        <i class="fas fa-venus-mars"></i>
+                                        <span>เพศ:</span>
+                                    </label>
+                                    <div class="suspect-options">
+                                        <button
+                                            @click="suspectGender = 'ชาย'"
+                                            class="suspect-option-btn"
+                                            :class="{ 'suspect-selected': suspectGender === 'ชาย' }"
+                                        >
+                                            <i class="fas fa-mars"></i>
+                                            <span>ชาย</span>
+                                        </button>
+                                        <button
+                                            @click="suspectGender = 'หญิง'"
+                                            class="suspect-option-btn"
+                                            :class="{ 'suspect-selected': suspectGender === 'หญิง' }"
+                                        >
+                                            <i class="fas fa-venus"></i>
+                                            <span>หญิง</span>
+                                        </button>
+                                        <button
+                                            @click="suspectGender = ''"
+                                            class="suspect-option-btn suspect-clear"
+                                            :class="{ 'suspect-selected': suspectGender === '' }"
+                                        >
+                                            <i class="fas fa-times"></i>
+                                            <span>ล้าง</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Hair Color Selection -->
+                                <div class="suspect-field">
+                                    <label class="suspect-label">
+                                        <i class="fas fa-cut"></i>
+                                        <span>สีผม:</span>
+                                    </label>
+                                    <div class="suspect-options">
+                                        <button
+                                            @click="suspectHairColor = 'ดำ'"
+                                            class="suspect-option-btn"
+                                            :class="{ 'suspect-selected': suspectHairColor === 'ดำ' }"
+                                        >
+                                            <span>ดำ</span>
+                                        </button>
+                                        <button
+                                            @click="suspectHairColor = 'น้ำตาล'"
+                                            class="suspect-option-btn"
+                                            :class="{ 'suspect-selected': suspectHairColor === 'น้ำตาล' }"
+                                        >
+                                            <span>น้ำตาล</span>
+                                        </button>
+                                        <button
+                                            @click="suspectHairColor = 'แดง'"
+                                            class="suspect-option-btn"
+                                            :class="{ 'suspect-selected': suspectHairColor === 'แดง' }"
+                                        >
+                                            <span>แดง</span>
+                                        </button>
+                                        <button
+                                            @click="suspectHairColor = 'บลอนด์'"
+                                            class="suspect-option-btn"
+                                            :class="{ 'suspect-selected': suspectHairColor === 'บลอนด์' }"
+                                        >
+                                            <span>บลอนด์</span>
+                                        </button>
+                                        <button
+                                            @click="suspectHairColor = 'เขียว'"
+                                            class="suspect-option-btn"
+                                            :class="{ 'suspect-selected': suspectHairColor === 'เขียว' }"
+                                        >
+                                            <span>เขียว</span>
+                                        </button>
+                                        <button
+                                            @click="suspectHairColor = ''"
+                                            class="suspect-option-btn suspect-clear"
+                                            :class="{ 'suspect-selected': suspectHairColor === '' }"
+                                        >
+                                            <i class="fas fa-times"></i>
+                                            <span>ล้าง</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Passengers Selection -->
+                                <div class="suspect-field">
+                                    <label class="suspect-label">
+                                        <i class="fas fa-users"></i>
+                                        <span>จำนวนคนในรถ:</span>
+                                    </label>
+                                    <div class="suspect-options">
+                                        <button
+                                            @click="suspectPassengers = '1'"
+                                            class="suspect-option-btn"
+                                            :class="{ 'suspect-selected': suspectPassengers === '1' }"
+                                        >
+                                            <span>1 คน</span>
+                                        </button>
+                                        <button
+                                            @click="suspectPassengers = '2'"
+                                            class="suspect-option-btn"
+                                            :class="{ 'suspect-selected': suspectPassengers === '2' }"
+                                        >
+                                            <span>2 คน</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Suspect Preview -->
+                                <div class="suspect-preview" x-show="suspectGender || suspectHairColor">
+                                    <div class="suspect-preview-text">
+                                        <template x-if="suspectGender">
+                                            <span class="suspect-tag" x-text="'เพศ: ' + suspectGender"></span>
+                                        </template>
+                                        <template x-if="suspectHairColor">
+                                            <span class="suspect-tag" x-text="'ผมสี: ' + suspectHairColor"></span>
+                                        </template>
+                                        <template x-if="suspectPassengers">
+                                            <span class="suspect-tag" x-text="'ในรถ: ' + suspectPassengers + ' คน'"></span>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Timer Controls -->
+                            <div class="timer-controls-section" x-show="selectedCar">
+                                <div class="flex gap-2">
+                                    <button
+                                        @click="startTimer()"
+                                        class="btn-timer-start"
+                                        :class="{ 'btn-disabled': timerActive }"
+                                        :disabled="timerActive"
+                                    >
+                                        <i class="fas fa-play"></i>
+                                        <span>เริ่ม 2 นาที</span>
+                                    </button>
+                                    <button
+                                        @click="stopTimer()"
+                                        class="btn-timer-stop"
+                                        :class="{ 'btn-disabled': !timerActive }"
+                                        :disabled="!timerActive"
+                                    >
+                                        <i class="fas fa-stop"></i>
+                                        <span>หยุด</span>
+                                    </button>
+                                    <button
+                                        @click="resetTimer()"
+                                        class="btn-timer-reset"
+                                    >
+                                        <i class="fas fa-redo"></i>
+                                        <span>รีเซ็ต</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Quick Presets Desktop -->
                     <div class="quick-presets-desktop mb-4 p-3 bg-gradient-to-r from-amber-900/20 to-red-900/20 border border-amber-500/30 rounded-xl">
                         <div class="flex items-center gap-2 mb-3">
@@ -3596,18 +4700,19 @@
 
                 <!-- Result Panel -->
                 <div class="result-panel">
-                    <div class="flex items-center gap-2 mb-4 pb-4 border-b border-sky-500/20">
-                        <i class="fas fa-chart-pie text-sky-400 text-xl"></i>
-                        <h2 class="text-xl font-bold text-white">ผลลัพธ์</h2>
+                    <!-- Header -->
+                    <div class="result-header">
+                        <i class="fas fa-chart-pie"></i>
+                        <h2>ผลลัพธ์</h2>
                     </div>
-                    
+
                     <!-- Main Result -->
                     <div class="result-main">
-                        <div class="text-slate-400 mb-2 text-sm">ค่าปรับรวม</div>
+                        <div class="result-main-label">ค่าปรับรวม</div>
                         <div class="result-main-value">
                             <span x-text="formatNumber(results.totalFine)"></span> ฿
                         </div>
-                        <div class="text-slate-400 mt-2 flex items-center justify-center gap-2">
+                        <div class="result-main-jail">
                             <i class="fas fa-clock"></i>
                             <span x-text="results.totalJail + ' นาที'"></span>
                         </div>
@@ -3647,34 +4752,31 @@
                         </div>
                         
                         <div class="mt-3 text-center">
-                            <img src="https://media.discordapp.net/attachments/1484824038055608342/1486985711273115658/image.png?ex=69ca21dc&is=69c8d05c&hm=c597f931bc1b17bbcfbf802ffa045d1e13577d66d9789a0e77b3fc6622d07c5b&=&format=webp&quality=lossless" 
-                                 alt="ตัวอย่างการ export ชื่อ" 
-                                 class="rounded-lg border border-red-500/30 max-w-full"
-                                 style="max-height: 200px; object-fit: contain;">
+                            <img src="https://media.discordapp.net/attachments/1484824038055608342/1486985711273115658/image.png?ex=69d94b1c&is=69d7f99c&hm=0b2a88780bf198f4fe6e74e7c4aa53ff6dd750500043f92e3394d9dd5b0441fe&=&format=webp&quality=lossless" alt="ตัวอย่างการ export ชื่อ" class="rounded-lg border border-red-500/30 max-w-full" style="max-height: 200px; object-fit: contain;">
                         </div>
                     </div>
                     
                     <!-- Summary -->
-                    <div class="mb-4 p-3 bg-slate-800/50 rounded-lg">
-                        <div class="text-slate-400 text-sm mb-2">สรุปข้อหา</div>
-                        <div class="flex flex-wrap gap-1">
+                    <div class="result-summary">
+                        <div class="result-summary-label">สรุปข้อหา</div>
+                        <div class="result-summary-tags">
                             <template x-if="selectedCharges.length === 0 && !moneyRedAmount">
                                 <span class="text-slate-500 text-xs">ยังไม่ได้เลือกข้อหา</span>
                             </template>
                             <template x-for="charge in selectedCharges" :key="charge.name">
-                                <span class="bg-sky-900/30 text-sky-300 text-xs px-2 py-1 rounded">
+                                <span class="summary-tag">
                                     <span x-text="charge.name"></span>
                                     <span x-show="charge.quantity > 1" x-text="' x' + charge.quantity"></span>
                                 </span>
                             </template>
                             <template x-if="moneyRedAmount">
-                                <span class="bg-amber-900/30 text-amber-300 text-xs px-2 py-1 rounded">
+                                <span class="summary-tag money">
                                     เงินแดง <span x-text="formatNumber(moneyRedAmount)"></span>
                                 </span>
                             </template>
-                            <template x-if="useBail && selectedCharges.length > 0 || useBail && moneyRedAmount">
-                                <span class="bg-green-900/30 text-green-300 text-xs px-2 py-1 rounded">
-                                    <i class="fas fa-check-circle mr-1"></i>
+                            <template x-if="(useBail && selectedCharges.length > 0) || (useBail && moneyRedAmount)">
+                                <span class="summary-tag bail-tag">
+                                    <i class="fas fa-check-circle"></i>
                                     <span>ประกัน</span>
                                 </span>
                             </template>
@@ -3803,49 +4905,61 @@
                         </div>
                     </div>
                     
-                    <!-- Final Result Display -->
-                    <div class="mb-4 p-4 bg-slate-700/30 rounded-xl" x-show="selectedCharges.length > 0 || moneyRedAmount">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-slate-400 text-sm">สถานะ:</span>
-                            <span class="px-3 py-1 rounded-full text-xs font-medium" 
-                                  :class="useBail ? 'bg-green-900/30 text-green-400' : 'bg-slate-600/30 text-slate-400'"
-                                  x-text="useBail ? 'ประกัน' : 'ไม่ประกัน'">
-                            </span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-400 text-sm">จำคุก:</span>
-                            <span class="text-white font-medium" x-text="useBail ? formatNumber(results.bailOptions.bail.time) + ' นาที' : formatNumber(results.bailOptions.noBail.time) + ' นาที'"></span>
-                        </div>
-                        <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-600">
-                            <span class="text-slate-400 text-sm">ค่าปรับรวม:</span>
-                            <span class="text-amber-400 font-bold" x-text="useBail ? formatNumber(results.bailOptions.bail.fine) + ' ฿' : formatNumber(results.bailOptions.noBail.fine) + ' ฿'"></span>
-                        </div>
+                    <!-- Status -->
+                    <div class="result-status" x-show="selectedCharges.length > 0 || moneyRedAmount">
+                        <span class="result-status-label">สถานะ:</span>
+                        <span class="result-status-badge"
+                              :class="useBail ? 'bail' : 'no-bail'"
+                              x-text="useBail ? 'ประกัน' : 'ไม่ประกัน'">
+                        </span>
                     </div>
                     
-                    <!-- Action Buttons -->
-                    <div class="action-buttons">
+                    <!-- In-Game Copy Button -->
+                    <div class="copy-section" x-show="selectedCharges.length > 0 || moneyRedAmount">
+                        <div class="copy-section-header">
+                            <i class="fas fa-gamepad"></i>
+                            <span>สำหรับพิมพ์ในแชทเกม</span>
+                        </div>
                         <button
-                            class="btn btn-primary flex-1"
-                            @click="copyResult()"
+                            class="btn-copy-game"
+                            @click="copyForGame()"
                             :disabled="selectedCharges.length === 0 && !moneyRedAmount"
                         >
                             <i class="fas fa-copy"></i>
-                            <span>คัดลอก</span>
+                            <span>คัดลอกคดี</span>
                         </button>
-                        <button
-                            class="btn btn-secondary"
-                            @click="resetForm()"
-                        >
-                            <i class="fas fa-redo"></i>
-                            <span>ล้าง</span>
-                        </button>
+                    </div>
+
+                    <!-- Discord Copy Buttons -->
+                    <div class="copy-section" x-show="selectedCharges.length > 0 || moneyRedAmount">
+                        <div class="copy-section-header">
+                            <i class="fab fa-discord"></i>
+                            <span>สำหรับลงคดีในดิสคอร์ด</span>
+                        </div>
+                        <div class="action-buttons">
+                            <button
+                                class="btn-copy"
+                                @click="copyResult()"
+                                :disabled="selectedCharges.length === 0 && !moneyRedAmount"
+                            >
+                                <i class="fas fa-copy"></i>
+                                <span>คัดลอก</span>
+                            </button>
+                            <button
+                                class="btn-reset"
+                                @click="resetForm()"
+                            >
+                                <i class="fas fa-redo"></i>
+                                <span>ล้าง</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- ===== Announcements Section ===== -->
-        <div id="announcements" class="mb-8" x-show="currentSection === 'announcements'" x-cloak>
+        <div id="announcements" class="page-section mb-8" x-show="currentSection === 'announcements'" x-cloak>
             <div class="container mx-auto px-4 max-w-7xl">
             <!-- Page Header with Stats -->
             <div class="card mb-6 overflow-hidden">
@@ -4105,7 +5219,7 @@
         </div>
 
         <!-- ===== Uniforms Section ===== -->
-        <div id="uniforms" class="mb-8" x-show="currentSection === 'uniforms'" x-cloak>
+        <div id="uniforms" class="page-section mb-8" x-show="currentSection === 'uniforms'" x-cloak>
             <div class="container mx-auto px-4 max-w-6xl">
             <!-- Page Header with Stats -->
             <div class="card mb-6 overflow-hidden">
@@ -4342,7 +5456,7 @@
         </div>
 
         <!-- ===== Guides Section ===== -->
-        <div id="guides" class="mb-8" x-show="currentSection === 'guides'" x-cloak>
+        <div id="guides" class="page-section mb-8" x-show="currentSection === 'guides'" x-cloak>
             <div class="container mx-auto px-4 max-w-5xl">
             <!-- Page Header -->
             <div class="card mb-6 overflow-hidden">
@@ -4549,57 +5663,21 @@
         </template>
     </div>
 
-    <!-- Police Roster Section - Search Only -->
-    <section class="police-roster">
-        <div class="container mx-auto px-4 py-12">
-            <!-- Section Header -->
-            <div class="roster-header">
-                <div class="roster-title-wrapper">
-                    <i class="fas fa-users roster-icon"></i>
-                    <h2 class="roster-title">รายชื่อ ตร.</h2>
-                    <span class="roster-count" id="rosterCount">126 อัตรา</span>
-                </div>
-            </div>
-
-            <!-- Search Box -->
-            <div class="search-container">
-                <div class="search-wrapper">
-                    <i class="fas fa-search search-icon"></i>
-                    <input 
-                        type="text" 
-                        id="rosterSearch"
-                        class="roster-search-input"
-                        placeholder="ค้นหาชื่อตำรวจ... (กด Ctrl+K เพื่อค้นหา)"
-                        autocomplete="off"
-                        autofocus
-                    />
-                    <button class="search-clear" id="searchClear" style="display: none;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="search-stats">
-                    <span id="searchResults">แสดงทั้งหมด 126 อัตรา</span>
-                </div>
-            </div>
-
-            <!-- Results Grid -->
-            <div class="roster-grid" id="rosterGrid">
-                <!-- Cards will be injected by JS -->
-            </div>
-
-            <!-- No Results -->
-            <div class="no-results" id="noResults" style="display: none;">
-                <i class="fas fa-search"></i>
-                <h3>ไม่พบชื่อที่ค้นหา</h3>
-                <p>ลองค้นหาด้วยคำอื่น</p>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-credit">
-            <p>Shark Police v.0.0.3 | Created by <strong class="text-sky-400">Kaneji Nightfall</strong></p>
+            <img src="assets/images/cache.png" alt="Cache Icon" class="footer-icon">
+            <p class="footer-text">Shark Police v.0.0.4 | Created by <strong>Kaneji Nightfall</strong></p>
+            <div class="footer-actions">
+                <button class="footer-btn danger" onclick="SharkCache.clearAll(); alert('✓ Cache cleared! Refresh to reload fresh data.')">
+                    <span>🗑️</span>
+                    <span>Clear Cache</span>
+                </button>
+                <button class="footer-btn info" onclick="console.log('Cache Stats:', SharkCache.getStats()); alert('Cache stats logged to console (F12)')">
+                    <span>📊</span>
+                    <span>Cache Stats</span>
+                </button>
+            </div>
         </div>
     </footer>
 
@@ -4607,14 +5685,15 @@
     <div class="mobile-bottom-spacer"></div>
 
     <!-- App Script - Load with absolute paths -->
-    <script src="./assets/js/performance.js?v=0.0.3"></script>
-    <script src="./assets/js/app-simple.js?v=0.0.3"></script>
-    <script src="./assets/js/visual-effects.js?v=0.0.3"></script>
-    <script src="./assets/js/anti-copy.js?v=0.0.3"></script>
-    <script src="./assets/js/roster.js?v=0.0.3"></script>
-    
+    <script src="./assets/js/cache-manager.js?v=0.1.2"></script>
+    <script src="./assets/js/performance.js?v=0.1.2"></script>
+    <script src="./assets/js/calculator-optimizer.js?v=0.1.2"></script>
+    <script src="./assets/js/app-simple.js?v=0.1.6"></script>
+    <script src="./assets/js/visual-effects.js?v=0.1.2"></script>
+    <script src="./assets/js/anti-copy.js?v=0.1.2"></script>
+
     <!-- Debug Tool (Remove in production) -->
-    <script src="./assets/js/debug.js?v=0.0.3"></script>
+    <script src="./assets/js/debug.js?v=0.1.2"></script>
 
     <!-- Announcement Modal & Utility Functions -->
     <script>

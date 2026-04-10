@@ -242,6 +242,6 @@ console.log(performance.getEntriesByName('operation')[0].duration);
 ---
 
 **Created by:** Kaneji Nightfall  
-**Version:** 0.0.3  
+**Version:** 0.0.4  
 **Last Updated:** 2026-04-02  
 **Performance Level:** ⚡ Ultimate

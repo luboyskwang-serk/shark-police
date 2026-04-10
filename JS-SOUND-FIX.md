@@ -8,10 +8,10 @@
 
 ### 1. **เพิ่ม Cache Buster**
 ```html
-<script src="./assets/js/app-simple.js?v=0.0.3"></script>
+<script src="./assets/js/app-simple.js?v=0.0.4"></script>
 ```
 - ใช้ `./` นำหน้า path
-- เพิ่ม `?v=0.0.3` เพื่อบังคับให้ browser โหลดไฟล์ใหม่
+- เพิ่ม `?v=0.0.4` เพื่อบังคับให้ browser โหลดไฟล์ใหม่
 
 ### 2. **แก้ไข Sound Path**
 ```javascript
@@ -234,7 +234,7 @@ fetch('./assets/sounds/toggle.mp3')
 ### JavaScript:
 - [ ] ไฟล์ JS ครบทุกไฟล์
 - [ ] Path ถูกต้อง (`./assets/js/...`)
-- [ ] Cache buster (`?v=0.0.3`)
+- [ ] Cache buster (`?v=0.0.4`)
 - [ ] ไฟล์ไม่เสียหาย (size > 0)
 - [ ] File permissions ถูกต้อง (644)
 
@@ -337,5 +337,5 @@ performance.getEntriesByType('resource')
 ---
 
 **Created by:** Kaneji Nightfall  
-**Version:** 0.0.3  
+**Version:** 0.0.4  
 **Last Updated:** 2026-04-02

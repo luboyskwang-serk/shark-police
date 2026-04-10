@@ -1,5 +1,5 @@
 /**
- * Shark Police v.0.0.3 - Simple Calculator (No Login)
+ * Shark Police v.0.0.4 - Simple Calculator (No Login)
  * Created by Kaneji Nightfall
  *
  * Stability Improvements:
@@ -154,6 +154,112 @@ function calculatorApp() {
         moneyRedAmount: '',
         useBail: false,
         notifications: [],
+
+        // ===== Car Selector + Timer =====
+        carSelectorEnabled: true, // Set to false to disable
+        carSelectorOpen: false, // Collapsed by default
+        selectedCar: '',
+        selectedCarImage: '',
+        selectedColor: '',
+        carColorFilter: '',
+        
+        // Suspect Description
+        suspectGender: '',
+        suspectHairColor: '',
+        suspectPassengers: '1',
+        
+        timerActive: false,
+        timerFinished: false,
+        timerSeconds: 120, // 2 minutes
+        timerInterval: null,
+        carList: [
+            { name: 'comet3', image: 'assets/images/car/comet3.png' },
+            { name: 'coquette4', image: 'assets/images/car/coquette4.png' },
+            { name: 'corsita', image: 'assets/images/car/corsita.png' },
+            { name: 'elegy', image: 'assets/images/car/elegy.png' },
+            { name: 'entity3', image: 'assets/images/car/entity3.png' },
+            { name: 'italigtb', image: 'assets/images/car/italigtb.png' },
+            { name: 'jester4', image: 'assets/images/car/jester4.png' },
+            { name: 'turismo3', image: 'assets/images/car/turismo3.png' },
+            { name: 'zentorno', image: 'assets/images/car/zentorno.png' }
+        ],
+        colorList: [
+            { name: 'แดง', hex: '#ef4444', filter: 'sepia(1) saturate(5) hue-rotate(-50deg)' },
+            { name: 'น้ำเงิน', hex: '#3b82f6', filter: 'sepia(1) saturate(5) hue-rotate(180deg)' },
+            { name: 'เขียว', hex: '#10b981', filter: 'sepia(1) saturate(5) hue-rotate(80deg)' },
+            { name: 'เหลือง', hex: '#fbbf24', filter: 'sepia(1) saturate(3) hue-rotate(10deg)' },
+            { name: 'ส้ม', hex: '#f97316', filter: 'sepia(1) saturate(4) hue-rotate(20deg)' },
+            { name: 'ม่วง', hex: '#a855f7', filter: 'sepia(1) saturate(5) hue-rotate(230deg)' },
+            { name: 'ชมพู', hex: '#ec4899', filter: 'sepia(1) saturate(4) hue-rotate(280deg)' },
+            { name: 'ขาว', hex: '#f3f4f6', filter: 'brightness(2) saturate(0)' },
+            { name: 'ดำ', hex: '#1f2937', filter: 'brightness(0.3) saturate(0)' },
+            { name: 'เทา', hex: '#6b7280', filter: 'brightness(0.8) saturate(0)' },
+            { name: 'ทอง', hex: '#d97706', filter: 'sepia(1) saturate(4) hue-rotate(5deg) brightness(0.9)' },
+            { name: 'เงิน', hex: '#9ca3af', filter: 'sepia(0.3) saturate(0.5) brightness(1.2)' }
+        ],
+
+        get timerDisplay() {
+            const minutes = Math.floor(this.timerSeconds / 60);
+            const seconds = this.timerSeconds % 60;
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        },
+
+        selectCar(name, image) {
+            this.selectedCar = name;
+            this.selectedCarImage = image;
+            SoundFX.play('toggle');
+        },
+
+        selectColor(name, filter) {
+            this.selectedColor = name;
+            this.carColorFilter = filter;
+            SoundFX.play('toggle');
+        },
+
+        clearColor() {
+            this.selectedColor = '';
+            this.carColorFilter = '';
+            SoundFX.play('toggle');
+        },
+
+        startTimer() {
+            if (this.timerActive) return;
+            
+            SoundFX.play('button_click');
+            this.timerActive = true;
+            this.timerFinished = false;
+            
+            this.timerInterval = setInterval(() => {
+                this.timerSeconds--;
+                
+                if (this.timerSeconds <= 0) {
+                    this.timerSeconds = 0;
+                    this.timerActive = false;
+                    this.timerFinished = true;
+                    clearInterval(this.timerInterval);
+                    this.showNotification('⏱️ หมดเวลา 2 นาที! หลุดคดีแล้ว', 'success');
+                    SoundFX.play('beep3');
+                }
+            }, 1000);
+        },
+
+        stopTimer() {
+            if (!this.timerActive) return;
+            
+            SoundFX.play('close_ui');
+            this.timerActive = false;
+            if (this.timerInterval) {
+                clearInterval(this.timerInterval);
+                this.timerInterval = null;
+            }
+        },
+
+        resetTimer() {
+            SoundFX.play('switch');
+            this.stopTimer();
+            this.timerSeconds = 120;
+            this.timerFinished = false;
+        },
 
         finesData: {
             illegal_items: [
@@ -423,25 +529,63 @@ function calculatorApp() {
                 return;
             }
 
-            const charges = this.selectedCharges.map(c => {
-                let name = c.name;
-                if (c.type === 'illegal_items' && c.quantity > 1) {
-                    name += ` x${c.quantity}`;
-                }
-                return name;
-            }).join(', ');
+            const charges = this.selectedCharges
+                .filter(c => c.name !== 'เงินผิดกฎหมาย (เงินแดง)')
+                .map(c => {
+                    let name = c.name;
+                    if (c.type === 'illegal_items' && c.quantity > 1) {
+                        name += ` x${c.quantity}`;
+                    }
+                    return name;
+                }).join(', ');
 
             const moneyText = this.moneyRedAmount ? `, เงินแดง ${this.moneyRedAmount}` : '';
-            const allCharges = `${charges}${moneyText}`;
+            let allCharges = `${charges}${moneyText}`;
+            if (allCharges.startsWith(', ')) allCharges = allCharges.substring(2);
             const hasRedCase = this.selectedCharges.some(c => c.type === 'red_cases');
             const canBail = !hasRedCase && this.useBail;
-            const bailText = canBail ? 'ประกัน' : 'ไม่ประกัน';
+            const bailText = canBail ? ', ประกัน' : '';
 
             const fineAmount = canBail ? this.results.bailOptions.bail.fine : this.results.totalFine;
-            const text = `⚖️ คดี: ${allCharges}, ${bailText}\n💰 ค่าปรับ: ${this.formatNumber(fineAmount)} ฿\n🆘 ช่วยเหลือ : @`;
+            const text = `${allCharges}${bailText}\n💰 ค่าปรับ: ${this.formatNumber(fineAmount)} ฿\n🆘 ช่วยเหลือ : @`;
 
             navigator.clipboard.writeText(text).then(() => {
                 this.showNotification('คัดลอกผลลัพธ์แล้ว!', 'success');
+                SoundFX.play('beep1');
+            }).catch(() => {
+                this.showNotification('ไม่สามารถคัดลอกได้', 'error');
+                SoundFX.play('close_ui');
+            });
+        },
+
+        copyForGame() {
+            if (this.selectedCharges.length === 0 && !this.moneyRedAmount) {
+                this.showNotification('กรุณาเลือกข้อหา', 'error');
+                SoundFX.play('close_ui');
+                return;
+            }
+
+            const charges = this.selectedCharges
+                .filter(c => c.name !== 'เงินผิดกฎหมาย (เงินแดง)')
+                .map(c => {
+                    let name = c.name;
+                    if (c.type === 'illegal_items' && c.quantity > 1) {
+                        name += ` x${c.quantity}`;
+                    }
+                    return name;
+                }).join(', ');
+
+            const moneyText = this.moneyRedAmount ? `, เงินแดง ${this.moneyRedAmount}` : '';
+            let allCharges = `${charges}${moneyText}`;
+            if (allCharges.startsWith(', ')) allCharges = allCharges.substring(2);
+            const hasRedCase = this.selectedCharges.some(c => c.type === 'red_cases');
+            const canBail = !hasRedCase && this.useBail;
+            const bailText = canBail ? ', ประกัน' : '';
+
+            const text = `${allCharges}${bailText}`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                this.showNotification('คัดลอกคดีสำหรับแชทเกมแล้ว!', 'success');
                 SoundFX.play('beep1');
             }).catch(() => {
                 this.showNotification('ไม่สามารถคัดลอกได้', 'error');
@@ -496,6 +640,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize sound toggle button
     SoundFX.init();
+
+    // Expose SoundFX globally for debug tools
+    window.SoundFX = SoundFX;
 
     // Add sound to bail option buttons
     document.addEventListener('click', (e) => {

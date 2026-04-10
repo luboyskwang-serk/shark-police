@@ -25,7 +25,7 @@ git init
 git add .
 
 # Commit
-git commit -m "Initial commit - Shark Police v.0.0.1"
+git commit -m "Initial commit - Shark Police v.0.0.4"
 
 # เปลี่ยนชื่อ branch เป็น main
 git branch -M main

@@ -1,0 +1,144 @@
+/**
+ * Shark Police v.0.0.4 - Ultra Performance Mode
+ * Lightweight - Low CPU/GPU Usage
+ * 
+ * Optimizations applied:
+ * - Removed all unnecessary animations
+ * - Removed backdrop-filter (GPU intensive)
+ * - Added content-visibility for lazy rendering
+ * - Reduced paint areas
+ * - GPU acceleration only for interactive elements
+ */
+
+/* ===== Ultra Performance Global Styles ===== */
+* {
+    /* Disable smooth scrolling for better performance on low-end devices */
+    scroll-behavior: auto !important;
+}
+
+/* ===== Disable all non-essential animations ===== */
+@media (prefers-reduced-motion: reduce), (max-width: 768px) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ===== Content Visibility - Lazy Rendering ===== */
+.charges-grid,
+.category-section,
+.announcement-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+}
+
+/* ===== GPU Acceleration - Interactive Elements Only ===== */
+.charge-item,
+.btn,
+.card {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Only apply hover effects on desktop */
+@media (hover: hover) {
+    .charge-item:hover,
+    .btn:hover,
+    .card:hover {
+        transform: translateY(-2px) translateZ(0);
+    }
+}
+
+/* ===== Touch Optimization ===== */
+@media (hover: none) and (pointer: coarse) {
+    .charge-item,
+    .btn,
+    .bottom-nav-item {
+        min-height: 48px;
+        min-width: 48px;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* ===== Reduce Paint Areas ===== */
+.header,
+.bottom-nav,
+.result-panel {
+    contain: layout style;
+}
+
+/* ===== Optimize Images ===== */
+.charge-image,
+.logo-image,
+.officer-avatar {
+    will-change: auto;
+    transform: translateZ(0);
+}
+
+/* ===== Disable expensive effects on low-end devices ===== */
+@media (max-width: 768px), (max-device-width: 768px) {
+    /* Remove box shadows */
+    .card,
+    .charge-item,
+    .btn {
+        box-shadow: none !important;
+    }
+    
+    /* Simplify gradients */
+    .card,
+    .result-panel {
+        background: rgba(30, 41, 59, 0.95) !important;
+    }
+    
+    /* Disable backdrop-filter */
+    .header,
+    .bottom-nav,
+    .card,
+    .music-player-controls {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+}
+
+/* ===== Force Hardware Acceleration for Scroll ===== */
+html {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* ===== Optimize Form Elements ===== */
+input,
+select,
+textarea {
+    -webkit-appearance: none;
+    appearance: none;
+    touch-action: manipulation;
+}
+
+/* ===== Reduce Layer Count ===== */
+.modal-content,
+.toast,
+.announcement-card {
+    will-change: auto;
+}
+
+/* ===== Print Optimization ===== */
+@media print {
+    .video-background,
+    .header,
+    .bottom-nav,
+    .music-player {
+        display: none !important;
+    }
+    
+    * {
+        background: transparent !important;
+        color: #000 !important;
+        box-shadow: none !important;
+    }
+}

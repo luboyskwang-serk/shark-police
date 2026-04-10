@@ -16,13 +16,13 @@
 ### ✅ แก้ไข:
 ```html
 <!-- ใช้หลายรูปแบบเพื่อรองรับทุก hosting -->
-<link rel="stylesheet" href="./assets/css/style.css?v=0.0.3">
-<link rel="stylesheet" href="assets/css/style.css?v=0.0.3">
+<link rel="stylesheet" href="./assets/css/style.css?v=0.0.4">
+<link rel="stylesheet" href="assets/css/style.css?v=0.0.4">
 ```
 
 **คำอธิบาย:**
 - `./` นำหน้าช่วยให้ path ชัดเจนขึ้น
-- `?v=0.0.3` เป็น cache buster บังคับให้ browser โหลด CSS ใหม่
+- `?v=0.0.4` เป็น cache buster บังคับให้ browser โหลด CSS ใหม่
 
 ---
 
@@ -38,7 +38,7 @@ TailwindCSS CDN มี CSS reset ที่ทับ CSS custom
 <script src="https://cdn.tailwindcss.com"></script>
 
 <!-- Custom CSS (โหลดทีหลังเพื่อ override) -->
-<link rel="stylesheet" href="./assets/css/style.css?v=0.0.3">
+<link rel="stylesheet" href="./assets/css/style.css?v=0.0.4">
 ```
 
 2. **ใช้ `!important` ใน CSS**
@@ -202,7 +202,7 @@ Hosting บางที่ block CSS files
 - [ ] ไฟล์ `style.css` มีอยู่จริง
 - [ ] File permissions ถูกต้อง (644)
 - [ ] CSS path ถูกต้อง
-- [ ] Cache buster (`?v=0.0.3`) เพิ่มแล้ว
+- [ ] Cache buster (`?v=0.0.4`) เพิ่มแล้ว
 - [ ] Custom CSS โหลดหลัง TailwindCSS
 - [ ] ไม่มี syntax error ใน CSS
 - [ ] ทดสอบใน browser หลายตัว
@@ -292,5 +292,5 @@ fetch('assets/css/style.css')
 ---
 
 **Created by:** Kaneji Nightfall  
-**Version:** 0.0.3  
+**Version:** 0.0.4  
 **Last Updated:** 2026-04-02

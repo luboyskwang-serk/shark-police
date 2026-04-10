@@ -1,5 +1,5 @@
 /**
- * Shark Police v.0.0.3 - Ultimate Performance Optimization
+ * Shark Police v.0.0.4 - Ultimate Performance Optimization
  * Created by Kaneji Nightfall
  * 
  * Optimizations:
@@ -50,12 +50,13 @@
     function setupGPUAcceleration() {
         // Force GPU layer creation for animated elements
         const gpuElements = document.querySelectorAll(
-            '.charge-item, .btn, .announcement-card, .bottom-nav-item, .logo-image'
+            '.charge-item, .btn, .announcement-card, .bottom-nav-item, .logo-image, .card, .header'
         );
-        
+
         gpuElements.forEach(el => {
             el.style.willChange = 'transform';
             el.style.transform = 'translateZ(0)';
+            el.style.backfaceVisibility = 'hidden';
         });
     }
 
@@ -85,9 +86,10 @@
             }
         }
 
-        window.addEventListener('scroll', onScroll, { 
+        // Use passive listener for better scroll performance
+        window.addEventListener('scroll', onScroll, {
             passive: true,
-            capture: false 
+            capture: false
         });
     }
 
@@ -140,27 +142,16 @@
         });
     }
 
-    // ===== Memory Management =====
+    // ===== Memory Management (Lightweight) =====
     function setupMemoryManagement() {
-        // Clean up event listeners on page unload
+        // Clean up on page unload
         window.addEventListener('beforeunload', () => {
-            // Clear any pending timeouts/intervals
+            // Clear pending timeouts
             let id = window.setTimeout(function() {}, 0);
             while (id--) {
                 window.clearTimeout(id);
             }
         });
-
-        // Limit DOM nodes
-        const checkDOMNodeCount = () => {
-            const nodeCount = document.getElementsByTagName('*').length;
-            if (nodeCount > 3000) {
-                console.warn('[Shark Police] High DOM node count:', nodeCount);
-            }
-        };
-        
-        // Check periodically
-        setInterval(checkDOMNodeCount, 30000);
     }
 
     // ===== Render Optimization =====
@@ -201,10 +192,11 @@
 
     // ===== CSS Containment =====
     function setupCSSContainment() {
-        // Add contain property to isolated components
+        // Add contain property to isolated components for better performance
         const sections = document.querySelectorAll('.category-section, .result-panel, .card');
         sections.forEach(section => {
             section.style.contain = 'layout style';
+            section.style.contentVisibility = 'auto';
         });
     }
 
@@ -257,31 +249,11 @@
         document.head.appendChild(style);
     }
 
-    // ===== Performance Monitoring =====
+    // ===== Performance Monitoring (Lightweight) =====
     function setupPerformanceMonitoring() {
-            // Monitor FPS
-        let frameCount = 0;
-        let lastTime = performance.now();
-        let fps = 60;
-
-        function measureFPS() {
-            frameCount++;
-            const currentTime = performance.now();
-            
-            if (currentTime - lastTime >= 1000) {
-                fps = frameCount;
-                frameCount = 0;
-                lastTime = currentTime;
-                
-                if (fps < 30) {
-                    console.warn('[Shark Police] Low FPS detected:', fps);
-                }
-            }
-            
-            requestAnimationFrame(measureFPS);
-        }
-        
-        requestAnimationFrame(measureFPS);
+        // Only log once on load
+        const loadTime = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
+        console.log(`[Shark Police] ⚡ Page loaded in ${loadTime}ms`);
     }
 
     // ===== Resource Hints =====
@@ -312,7 +284,7 @@
             setupGPUAcceleration();
             setupScrollPerformance();
             setupTouchPerformance();
-            
+
             // Important optimizations (run after DOM ready)
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', () => {
@@ -339,7 +311,7 @@
                 setupResourceHints();
                 setupPerformanceMonitoring();
             }
-            
+
             console.log('[Shark Police] ⚡ Ultimate performance optimizations initialized');
         } catch (error) {
             console.error('[Shark Police] Performance initialization error:', error);
